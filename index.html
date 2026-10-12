@@ -1026,7 +1026,9 @@
             </div>
             <div class="item-actions">
               <span class="pill ${s.key}">${s.label}</span>
-              <button class="btn btn-success" data-contractor="${payload}" onclick="openExtendFromBtn(this)">Extend</button>
+              ${s.key === 'bad'
+                ? `<button class="btn btn-success" data-contractor="${payload}" onclick="openExtendFromBtn(this)">Extend</button>`
+                : `<button class="btn btn-ghost" disabled title="Only expired permits can be extended">Extend</button>`}
             </div>
           </div>`;
       }).join('');
@@ -1056,6 +1058,10 @@
     // EXTEND FLOW
     // ============================================================
     function openExtend(c) {
+      if (statusOf(c.validUntil).key !== 'bad') {
+        toast('Only expired permits can be extended', 'warning');
+        return;
+      }
       pendingExtend = c;
       setText('mName', c.name);
       setText('mCert', c.certNumber);
@@ -1071,16 +1077,17 @@
 
     async function confirmExtend() {
       if (!pendingExtend) return;
+      const target = pendingExtend; // keep a copy: closeModal() clears pendingExtend
       const btn = document.getElementById('confirmBtn');
       btn.disabled = true;
       btn.textContent = 'Saving…';
       try {
         const res = await api('extendValidity', {
-          certNumber: pendingExtend.certNumber,
-          rowIndex: pendingExtend.rowIndex
+          certNumber: target.certNumber,
+          rowIndex: target.rowIndex
         });
         closeModal();
-        toast(`Extended for ${pendingExtend.name} until ${res.newValidUntil}`, 'success');
+        toast(`Extended for ${target.name} until ${res.newValidUntil}`, 'success');
         await loadDashboard();
         const name = document.getElementById('searchName').value.trim();
         const cert = document.getElementById('searchCert').value.trim();
