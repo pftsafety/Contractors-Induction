@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Contractors Induction Portal</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231e5aa8'/><text x='50' y='64' font-size='46' font-weight='bold' fill='white' text-anchor='middle' font-family='Arial'>CI</text></svg>">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --border: #e6ebf2;
+      --text: #1e293b;
+      --text-2: #64748b;
+      --text-3: #94a3b8;
+      --primary: #2563eb;
+      --primary-2: #60a5fa;
+      --primary-soft: #eff6ff;
+      --success: #10b981;
+      --success-soft: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-soft: #fffbeb;
+      --danger: #ef4444;
+      --danger-soft: #fef2f2;
+      --radius-lg: 20px;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.10);
+      --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 500px at 0% -10%, #dbeafe 0%, transparent 60%),
+        radial-gradient(900px 500px at 100% 0%, #ede9fe 0%, transparent 55%),
+        var(--bg);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+      padding-top: calc(28px + env(safe-area-inset-top, 0px));
+    }
+
+    /* ===== HEADER ===== */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #60a5fa, #2563eb);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .brand p {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 2px;
+    }
+
+    .refresh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+    }
+
+    .refresh-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+
+    /* ===== STATS ===== */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+    }
+
+    .stat:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .stat.ok .stat-icon { background: var(--success-soft); }
+    .stat.warn .stat-icon { background: var(--warning-soft); }
+    .stat.bad .stat-icon { background: var(--danger-soft); }
+    .stat.total .stat-icon { background: var(--primary-soft); }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 700;
+      margin-top: 2px;
+      letter-spacing: -0.5px;
+    }
+
+    /* ===== CHARTS ===== */
+    .charts {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+
+    .card-sub {
+      font-size: 12px;
+      color: var(--text-3);
+      margin-top: 2px;
+    }
+
+    .chart-box { position: relative; height: 240px; }
+
+    /* ===== WORKSPACE (search + list) ===== */
+    .workspace {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .toolbar {
+      padding: 22px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 12px;
+      align-items: center;
+      background: var(--surface-2);
+    }
+
+    .field {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .field-icon {
+      position: absolute;
+      left: 14px;
+      color: var(--text-3);
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px 14px 12px 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font: inherit;
+      font-size: 14px;
+      color: var(--text);
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .field input::placeholder { color: var(--text-3); }
+
+    .field input:focus {
+      outline: none;
+      border-color: var(--primary-2);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .btn {
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      border: none;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .2s var(--ease), box-shadow .2s var(--ease), background .2s;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #60a5fa, #2563eb);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-primary:hover { box-shadow: 0 10px 22px rgba(37, 99, 235, 0.32); transform: translateY(-1px); }
+
+    .btn-success {
+      background: linear-gradient(135deg, #34d399, #10b981);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-success:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(16, 185, 129, 0.32); }
+
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover { background: var(--surface-2); }
+
+    .btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    .tabs {
+      display: inline-flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .tab {
+      border: none;
+      background: transparent;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all .2s var(--ease);
+    }
+
+    .tab.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    .workspace-head {
+      padding: 18px 22px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .count {
+      font-size: 13px;
+      color: var(--text-2);
+      font-weight: 600;
+    }
+
+    .list {
+      padding: 18px 22px 22px;
+      display: grid;
+      gap: 12px;
+      min-height: 200px;
+    }
+
+    .item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: var(--surface);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr auto;
+      gap: 16px;
+      align-items: center;
+      transition: box-shadow .25s var(--ease), transform .25s var(--ease), border-color .25s;
+      animation: rise .35s var(--ease) both;
+    }
+
+    .item:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-1px);
+      border-color: #d6e4ff;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: inline-grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 14px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      margin-right: 12px;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+
+    .who { display: flex; align-items: center; min-width: 0; }
+
+    .name {
+      font-weight: 700;
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .firm {
+      font-size: 12px;
+      color: var(--text-2);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .meta-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .meta-value {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 3px;
+      color: var(--text);
+    }
+
+    .meta-sub {
+      font-size: 12px;
+      color: var(--text-2);
+      margin-top: 2px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pill::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .pill.ok { background: var(--success-soft); color: #047857; }
+    .pill.warn { background: var(--warning-soft); color: #b45309; }
+    .pill.bad { background: var(--danger-soft); color: #b91c1c; }
+
+    .item-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .item-actions .btn { padding: 10px 14px; font-size: 13px; }
+
+    .empty {
+      text-align: center;
+      padding: 56px 20px;
+      color: var(--text-2);
+    }
+
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: var(--primary-soft);
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      margin: 0 auto 14px;
+    }
+
+    .empty h3 { font-size: 16px; color: var(--text); margin-bottom: 4px; }
+    .empty p { font-size: 13px; }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 48px;
+      color: var(--text-2);
+      font-size: 14px;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translate(-50%, 20px);
+      background: var(--text);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s var(--ease);
+      z-index: 2000;
+      max-width: calc(100% - 32px);
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .toast.success { background: #065f46; }
+    .toast.error { background: #991b1b; }
+    .toast.warning { background: #92400e; }
+
+    /* ===== MODAL ===== */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.35);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal.open { display: flex; animation: fade .2s ease-out; }
+
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+    .sheet {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: var(--shadow-lg);
+      animation: pop .3s var(--ease);
+    }
+
+    @keyframes pop {
+      from { opacity: 0; transform: translateY(12px) scale(.98); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .sheet h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .sheet > p {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-bottom: 20px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .info {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+    }
+
+    .info.full { grid-column: 1 / -1; }
+
+    .info .k {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .info .v {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .new-expiry {
+      background: linear-gradient(135deg, #eff6ff, #e0f2fe);
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .new-expiry .k {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1d4ed8;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .new-expiry .v {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-top: 4px;
+    }
+
+    .note {
+      font-size: 12px;
+      color: var(--text-3);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .sheet-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .sheet-actions .btn { min-width: 120px; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 980px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .charts { grid-template-columns: 1fr; }
+      .toolbar { grid-template-columns: 1fr; }
+      .item { grid-template-columns: 1fr 1fr; }
+      .item-actions { grid-column: 1 / -1; align-items: stretch; }
+      .item-actions .btn { width: 100%; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { padding: 20px 14px 50px; }
+      .stats { gap: 10px; }
+      .stat { padding: 14px; flex-direction: column; align-items: flex-start; }
+      .stat-value { font-size: 22px; }
+      .item { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr; }
+      .tabs { width: 100%; }
+      .tab { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- HEADER -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">CI</div>
+        <div>
+          <h1>Contractors Induction</h1>
+          <p>HLL Lifecare · Peroorkada Factory · Safety &amp; Environment</p>
+        </div>
+      </div>
+      <button class="refresh-btn" onclick="loadDashboard()">↻ Refresh</button>
+    </header>
+
+    <!-- STATS -->
+    <section class="stats">
+      <div class="stat total">
+        <div class="stat-icon">👥</div>
+        <div>
+          <div class="stat-label">Total</div>
+          <div class="stat-value" id="statTotal">–</div>
+        </div>
+      </div>
+      <div class="stat ok">
+        <div class="stat-icon">✅</div>
+        <div>
+          <div class="stat-label">Active</div>
+          <div class="stat-value" id="statActive">–</div>
+        </div>
+      </div>
+      <div class="stat warn">
+        <div class="stat-icon">⏳</div>
+        <div>
+          <div class="stat-label">Expiring ≤30d</div>
+          <div class="stat-value" id="statExpiring">–</div>
+        </div>
+      </div>
+      <div class="stat bad">
+        <div class="stat-icon">⛔</div>
+        <div>
+          <div class="stat-label">Expired</div>
+          <div class="stat-value" id="statExpired">–</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHARTS -->
+    <section class="charts">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Status Overview</div>
+            <div class="card-sub">Share of all contractors</div>
+          </div>
+        </div>
+        <div class="chart-box"><canvas id="statusChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Expiry Timeline</div>
+            <div class="card-sub">Upcoming validity end dates</div>
+          </div>
+        </div>
+        <div class="chart-box"><canvas id="timelineChart"></canvas></div>
+      </div>
+    </section>
+
+    <!-- WORKSPACE -->
+    <section class="workspace">
+      <div class="toolbar">
+        <div class="field">
+          <span class="field-icon">👤</span>
+          <input type="search" id="searchName" placeholder="Search by contractor name" autocomplete="off">
+        </div>
+        <div class="field">
+          <span class="field-icon">🪪</span>
+          <input type="search" id="searchCert" placeholder="Search by certificate no. (HLL/PFT/IND/…)" autocomplete="off">
+        </div>
+        <button class="btn btn-primary" onclick="runSearch()">Search</button>
+      </div>
+
+      <div class="workspace-head">
+        <div class="tabs">
+          <button class="tab active" data-view="search">Search results</button>
+          <button class="tab" data-view="all">All contractors</button>
+        </div>
+        <div class="count" id="countLabel"></div>
+      </div>
+
+      <div class="list" id="resultsList">
+        <div class="empty">
+          <div class="empty-icon">🔍</div>
+          <h3>Search for a contractor</h3>
+          <p>Enter a name or certificate number above, or switch to “All contractors”.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- EXTEND MODAL -->
+  <div class="modal" id="extendModal" onclick="if(event.target===this) closeModal()">
+    <div class="sheet">
+      <h2>Extend induction validity</h2>
+      <p>Confirm the contractor has completed retraining in the Safety Department.</p>
+
+      <div class="info-grid">
+        <div class="info full">
+          <div class="k">Contractor</div>
+          <div class="v" id="mName">–</div>
+        </div>
+        <div class="info">
+          <div class="k">Certificate</div>
+          <div class="v" id="mCert">–</div>
+        </div>
+        <div class="info">
+          <div class="k">Current expiry</div>
+          <div class="v" id="mCurrent">–</div>
+        </div>
+      </div>
+
+      <div class="new-expiry">
+        <div class="k">New expiry date</div>
+        <div class="v" id="mNew">–</div>
+      </div>
+
+      <div class="note">Validity extends 3 months from today. An updated pass is emailed to the contractor.</div>
+
+      <div class="sheet-actions">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-success" id="confirmBtn" onclick="confirmExtend()">Confirm &amp; extend</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ============================================================
+    // CONFIG
+    // ============================================================
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypc8MItURjTPEvE3FcpIvFMmjqdNwVvAjOpI2Vh0PL4OKFrC3AKbTDU0aKqhxKRWfI/exec';
+
+    let allContractors = [];
+    let currentView = 'search';
+    let pendingExtend = null;
+    let charts = {};
+
+    // ============================================================
+    // API
+    // ============================================================
+    async function api(action, params = {}) {
+      const url = new URL(APPS_SCRIPT_URL);
+      url.searchParams.set('action', action);
+      Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+      const res = await fetch(url.toString());
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || 'Request failed');
+      return data;
+    }
+
+    // ============================================================
+    // DATE HELPERS (dd/MM/yyyy everywhere)
+    // ============================================================
+    function parseDMY(str) {
+      if (!str) return null;
+      const m = String(str).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+      if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+      const d = new Date(str);
+      return isNaN(d) ? null : d;
+    }
+
+    function fmtDMY(date) {
+      const d = typeof date === 'string' ? parseDMY(date) : date;
+      if (!d || isNaN(d)) return '–';
+      return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+    }
+
+    function addMonths(months) {
+      const d = new Date();
+      d.setMonth(d.getMonth() + months);
+      return d;
+    }
+
+    function statusOf(validUntil) {
+      const d = parseDMY(validUntil);
+      if (!d) return { key: 'ok', label: 'Active', days: null };
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const days = Math.ceil((d - today) / 86400000);
+      if (days < 0) return { key: 'bad', label: 'Expired', days };
+      if (days <= 30) return { key: 'warn', label: 'Expiring soon', days };
+      return { key: 'ok', label: 'Active', days };
+    }
+
+    // ============================================================
+    // DASHBOARD
+    // ============================================================
+    async function loadDashboard() {
+      try {
+        const res = await api('getAllExpiring');
+        allContractors = res.data || [];
+        renderStats();
+        renderCharts();
+        if (currentView === 'all') renderList(allContractors);
+      } catch (e) {
+        toast(e.message, 'error');
+      }
+    }
+
+    function renderStats() {
+      let ok = 0, warn = 0, bad = 0;
+      allContractors.forEach(c => {
+        const s = statusOf(c.validUntil).key;
+        if (s === 'bad') bad++;
+        else if (s === 'warn') warn++;
+        else ok++;
+      });
+      setText('statTotal', allContractors.length);
+      setText('statActive', ok);
+      setText('statExpiring', warn);
+      setText('statExpired', bad);
+    }
+
+    function renderCharts() {
+      const counts = { ok: 0, warn: 0, bad: 0 };
+      allContractors.forEach(c => counts[statusOf(c.validUntil).key]++);
+
+      const palette = { ok: '#10b981', warn: '#f59e0b', bad: '#ef4444' };
+
+      if (charts.status) charts.status.destroy();
+      charts.status = new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Active', 'Expiring soon', 'Expired'],
+          datasets: [{
+            data: [counts.ok, counts.warn, counts.bad],
+            backgroundColor: [palette.ok, palette.warn, palette.bad],
+            borderWidth: 0,
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '68%',
+          plugins: {
+            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16, font: { size: 12 } } }
+          }
+        }
+      });
+
+      // Timeline: validity end dates per month, next 6 months
+      const buckets = [];
+      const now = new Date();
+      for (let i = 0; i < 6; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+        buckets.push({
+          label: d.toLocaleString('en-GB', { month: 'short', year: '2-digit' }),
+          y: d.getFullYear(), m: d.getMonth(), n: 0
+        });
+      }
+      allContractors.forEach(c => {
+        const d = parseDMY(c.validUntil);
+        if (!d) return;
+        const b = buckets.find(x => x.y === d.getFullYear() && x.m === d.getMonth());
+        if (b) b.n++;
+      });
+
+      if (charts.timeline) charts.timeline.destroy();
+      charts.timeline = new Chart(document.getElementById('timelineChart'), {
+        type: 'bar',
+        data: {
+          labels: buckets.map(b => b.label),
+          datasets: [{
+            label: 'Expiring',
+            data: buckets.map(b => b.n),
+            backgroundColor: 'rgba(37, 99, 235, 0.85)',
+            borderRadius: 8,
+            maxBarThickness: 40
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false } },
+            y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#eef2f7' } }
+          }
+        }
+      });
+    }
+
+    // ============================================================
+    // SEARCH & LIST
+    // ============================================================
+    async function runSearch() {
+      const name = document.getElementById('searchName').value.trim();
+      const cert = document.getElementById('searchCert').value.trim();
+      if (!name && !cert) { toast('Enter a name or certificate number', 'warning'); return; }
+
+      setView('search');
+      renderLoading();
+      try {
+        const res = name
+          ? await api('searchByName', { name })
+          : await api('searchByCertNumber', { certNumber: cert });
+        renderList(res.data || []);
+      } catch (e) {
+        renderEmpty('Something went wrong', e.message);
+        toast(e.message, 'error');
+      }
+    }
+
+    function setView(view) {
+      currentView = view;
+      document.querySelectorAll('.tab').forEach(t =>
+        t.classList.toggle('active', t.dataset.view === view));
+    }
+
+    document.querySelectorAll('.tab').forEach(t => {
+      t.addEventListener('click', async () => {
+        setView(t.dataset.view);
+        if (t.dataset.view === 'all') {
+          renderLoading();
+          try {
+            if (!allContractors.length) await loadDashboard();
+            renderList(allContractors);
+          } catch (e) { renderEmpty('Could not load', e.message); }
+        } else {
+          renderEmpty();
+        }
+      });
+    });
+
+    function renderList(items) {
+      const el = document.getElementById('resultsList');
+      setText('countLabel', items.length ? `${items.length} record${items.length === 1 ? '' : 's'}` : '');
+      if (!items.length) { renderEmpty('No contractors found', 'Try a different name or certificate number'); return; }
+
+      el.innerHTML = items.map((c, i) => {
+        const s = statusOf(c.validUntil);
+        const sub = s.days === null ? '' :
+          s.days < 0 ? `${Math.abs(s.days)} day${Math.abs(s.days) === 1 ? '' : 's'} ago` :
+          `in ${s.days} day${s.days === 1 ? '' : 's'}`;
+        const initials = (c.name || '?').split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+        const payload = esc(JSON.stringify(c));
+        return `
+          <div class="item" style="animation-delay:${Math.min(i, 8) * 40}ms">
+            <div class="who">
+              <div class="avatar">${esc(initials)}</div>
+              <div style="min-width:0">
+                <div class="name">${esc(c.name)}</div>
+                <div class="firm">${esc(c.contractor)}</div>
+              </div>
+            </div>
+            <div>
+              <div class="meta-label">Certificate</div>
+              <div class="meta-value">${esc(c.certNumber)}</div>
+            </div>
+            <div>
+              <div class="meta-label">Valid until</div>
+              <div class="meta-value">${esc(fmtDMY(c.validUntil))}</div>
+              <div class="meta-sub">${esc(sub)}</div>
+            </div>
+            <div class="item-actions">
+              <span class="pill ${s.key}">${s.label}</span>
+              <button class="btn btn-success" data-contractor="${payload}" onclick="openExtendFromBtn(this)">Extend</button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function openExtendFromBtn(btn) {
+      openExtend(JSON.parse(btn.dataset.contractor));
+    }
+
+    function renderLoading() {
+      document.getElementById('resultsList').innerHTML =
+        '<div class="loading"><div class="spinner"></div>Loading…</div>';
+      setText('countLabel', '');
+    }
+
+    function renderEmpty(title = 'Search for a contractor', msg = 'Enter a name or certificate number above, or switch to “All contractors”.') {
+      document.getElementById('resultsList').innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">🔍</div>
+          <h3>${esc(title)}</h3>
+          <p>${esc(msg)}</p>
+        </div>`;
+      setText('countLabel', '');
+    }
+
+    // ============================================================
+    // EXTEND FLOW
+    // ============================================================
+    function openExtend(c) {
+      pendingExtend = c;
+      setText('mName', c.name);
+      setText('mCert', c.certNumber);
+      setText('mCurrent', fmtDMY(c.validUntil));
+      setText('mNew', fmtDMY(addMonths(3)));
+      document.getElementById('extendModal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('extendModal').classList.remove('open');
+      pendingExtend = null;
+    }
+
+    async function confirmExtend() {
+      if (!pendingExtend) return;
+      const btn = document.getElementById('confirmBtn');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      try {
+        const res = await api('extendValidity', {
+          certNumber: pendingExtend.certNumber,
+          rowIndex: pendingExtend.rowIndex
+        });
+        closeModal();
+        toast(`Extended for ${pendingExtend.name} until ${res.newValidUntil}`, 'success');
+        await loadDashboard();
+        const name = document.getElementById('searchName').value.trim();
+        const cert = document.getElementById('searchCert').value.trim();
+        if (currentView === 'search' && (name || cert)) runSearch();
+      } catch (e) {
+        toast(e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Confirm & extend';
+      }
+    }
+
+    // ============================================================
+    // UTILS
+    // ============================================================
+    function setText(id, v) { document.getElementById(id).textContent = v; }
+
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[ch]));
+    }
+
+    let toastTimer;
+    function toast(msg, type = 'info') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `toast show ${type}`;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && (e.target.id === 'searchName' || e.target.id === 'searchCert')) runSearch();
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    loadDashboard();
+  </script>
+</body>
+</html>
