@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1018,6 +1019,7 @@
             </div>
             <div class="item-actions">
               <span class="pill ${s.key}">${s.label}</span>
+              <button class="btn btn-ghost" data-contractor="${payload}" onclick="downloadCardFromBtn(this)">Download card</button>
               ${s.key === 'bad'
                 ? `<button class="btn btn-success" data-contractor="${payload}" onclick="openExtendFromBtn(this)">Extend</button>`
                 : `<button class="btn btn-ghost" disabled title="Only expired permits can be extended">Extend</button>`}
@@ -1095,6 +1097,185 @@
     // ============================================================
     // UTILS
     // ============================================================
+    // ============================================================
+    // INDUCTION CARD → JPG (with QR code)
+    // ============================================================
+    function downloadCardFromBtn(btn) {
+      downloadCard(JSON.parse(btn.dataset.contractor));
+    }
+
+    function makeQRImage(text, size) {
+      return new Promise((resolve, reject) => {
+        const holder = document.createElement('div');
+        holder.style.display = 'none';
+        document.body.appendChild(holder);
+        try {
+          new QRCode(holder, { text, width: size, height: size, correctLevel: QRCode.CorrectLevel.M });
+          const canvas = holder.querySelector('canvas');
+          const src = canvas ? canvas.toDataURL('image/png') : holder.querySelector('img').src;
+          const img = new Image();
+          img.onload = () => { holder.remove(); resolve(img); };
+          img.onerror = () => { holder.remove(); reject(new Error('Could not draw QR code')); };
+          img.src = src;
+        } catch (err) {
+          holder.remove();
+          reject(err);
+        }
+      });
+    }
+
+    function roundRectPath(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    // Every validity period is 3 months, so the start date is Valid Until minus 3 months
+    function validFromOf(validUntil) {
+      const d = parseDMY(validUntil);
+      if (!d) return null;
+      const start = new Date(d);
+      start.setMonth(start.getMonth() - 3);
+      return start;
+    }
+
+    function drawLabel(ctx, text, x, y, align = 'left') {
+      ctx.font = '600 24px Inter, Arial, sans-serif';
+      ctx.fillStyle = '#8f8a7c';
+      ctx.textAlign = align;
+      ctx.fillText(text.toUpperCase(), x, y);
+    }
+
+    function drawValue(ctx, text, x, y, maxW, align = 'left') {
+      ctx.font = '600 38px Inter, Arial, sans-serif';
+      ctx.fillStyle = '#1d1b16';
+      ctx.textAlign = align;
+      ctx.fillText(text, x, y, maxW);
+    }
+
+    async function downloadCard(c) {
+      if (typeof QRCode === 'undefined') {
+        toast('QR library did not load. Check your internet connection.', 'error');
+        return;
+      }
+      try {
+        await document.fonts.ready;
+
+        const payload = JSON.stringify({
+          type: 'HLL_WORKER_ID',
+          name: c.name,
+          firm: c.contractor,
+          id: c.certNumber
+        });
+        const qr = await makeQRImage(payload, 560);
+
+        const W = 1080, H = 1640, pad = 60;
+        const canvas = document.createElement('canvas');
+        canvas.width = W;
+        canvas.height = H;
+        const ctx = canvas.getContext('2d');
+        const cx = W / 2;
+
+        // Page background
+        ctx.fillStyle = '#f6f3ec';
+        ctx.fillRect(0, 0, W, H);
+
+        // Card
+        ctx.save();
+        roundRectPath(ctx, pad, pad, W - pad * 2, H - pad * 2, 36);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.clip();
+
+        // Header band (clipped to card corners)
+        ctx.fillStyle = '#0f5e58';
+        ctx.fillRect(pad, pad, W - pad * 2, 230);
+        ctx.restore();
+
+        // Header text
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#f6f3ec';
+        ctx.font = '700 50px Fraunces, Georgia, serif';
+        ctx.fillText('INDUCTION COMPLETION PASS', cx, pad + 110, W - pad * 2 - 80);
+        ctx.font = '400 30px Inter, Arial, sans-serif';
+        ctx.fillStyle = '#d9ece9';
+        ctx.fillText('HLL Lifecare Limited · Peroorkada Factory', cx, pad + 170);
+
+        // Holder
+        ctx.fillStyle = '#5d5a50';
+        ctx.font = '400 34px Inter, Arial, sans-serif';
+        ctx.fillText('This pass certifies that', cx, pad + 350);
+
+        ctx.fillStyle = '#0f5e58';
+        ctx.font = '700 78px Fraunces, Georgia, serif';
+        ctx.fillText((c.name || '').toUpperCase(), cx, pad + 440, W - pad * 2 - 80);
+
+        ctx.fillStyle = '#5d5a50';
+        ctx.font = '400 32px Inter, Arial, sans-serif';
+        ctx.fillText('has successfully completed the required safety induction.', cx, pad + 505, W - pad * 2 - 80);
+
+        // QR code block
+        const qrSize = 480;
+        const qrX = cx - qrSize / 2;
+        const qrY = pad + 560;
+        ctx.fillStyle = '#f8fafc';
+        roundRectPath(ctx, qrX - 30, qrY - 30, qrSize + 60, qrSize + 60, 24);
+        ctx.fill();
+        ctx.strokeStyle = '#e7e2d6';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.drawImage(qr, qrX, qrY, qrSize, qrSize);
+
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#5d5a50';
+        ctx.font = '600 26px Inter, Arial, sans-serif';
+        ctx.fillText('SCAN FOR SITE ACCESS', cx, qrY + qrSize + 80);
+
+        // Divider
+        const divY = qrY + qrSize + 120;
+        ctx.fillStyle = '#e7e2d6';
+        ctx.fillRect(pad + 60, divY, W - pad * 2 - 120, 2);
+
+        // Details grid
+        const leftX = pad + 80;
+        const rightX = cx + 40;
+        const colMax = (W - pad * 2) / 2 - 100;
+
+        drawLabel(ctx, 'Certificate', leftX, divY + 60);
+        drawValue(ctx, c.certNumber || '–', leftX, divY + 106, colMax);
+
+        const rightEdge = W - pad - 80;
+        drawLabel(ctx, 'Valid from', rightEdge, divY + 60, 'right');
+        drawValue(ctx, fmtDMY(validFromOf(c.validUntil)), rightEdge, divY + 106, colMax, 'right');
+
+        drawLabel(ctx, 'Contractor firm', leftX, divY + 160);
+        drawValue(ctx, c.contractor || '–', leftX, divY + 206, colMax);
+
+        // Footer
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#8f8a7c';
+        ctx.font = '400 24px Inter, Arial, sans-serif';
+        ctx.fillText('Safety & Environment Department · HLL Lifecare Limited', cx, H - pad - 36);
+
+        // Save as JPG
+        const url = canvas.toDataURL('image/jpeg', 0.95);
+        const a = document.createElement('a');
+        const safeCert = String(c.certNumber || 'card').replace(/[\/\\:*?"<>| ]/g, '_');
+        a.href = url;
+        a.download = `Induction_Card_${safeCert}.jpg`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        toast('Induction card downloaded', 'success');
+      } catch (e) {
+        toast('Could not create card: ' + e.message, 'error');
+      }
+    }
+
     function setText(id, v) { document.getElementById(id).textContent = v; }
 
     function esc(s) {
