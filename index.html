@@ -432,6 +432,22 @@
 
     .item-actions .btn { padding: 9px 14px; font-size: 13px; }
 
+    .ext-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 600;
+      vertical-align: middle;
+      cursor: help;
+      white-space: nowrap;
+    }
+
     .empty {
       text-align: center;
       padding: 56px 20px;
@@ -999,12 +1015,19 @@
           `in ${s.days} day${s.days === 1 ? '' : 's'}`;
         const initials = (c.name || '?').split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
         const payload = esc(JSON.stringify(c));
+        const ext = c.extensions || [];
+        const extTooltip = ext.map(x =>
+          `${x.date}: ${x.previous} → ${x.newValidUntil}${x.by ? ' by ' + x.by : ''}`
+        ).join('\n');
+        const extChip = ext.length
+          ? `<span class="ext-chip" title="${esc(extTooltip)}">↻ Extended ${ext.length}×</span>`
+          : '';
         return `
           <div class="item" style="animation-delay:${Math.min(i, 8) * 40}ms">
             <div class="who">
               <div class="avatar">${esc(initials)}</div>
               <div style="min-width:0">
-                <div class="name">${esc(c.name)}</div>
+                <div class="name">${esc(c.name)}${extChip}</div>
                 <div class="firm">${esc(c.contractor)}</div>
               </div>
             </div>
