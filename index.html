@@ -436,7 +436,7 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      margin-left: 8px;
+      margin-left: 0;
       padding: 2px 8px;
       border-radius: 999px;
       background: var(--teal-soft);
@@ -1021,14 +1021,17 @@
         ).join('\n');
         const extChip = ext.length
           ? `<span class="ext-chip" title="${esc(extTooltip)}">↻ Extended ${ext.length}×</span>`
-          : '';
+          : (c.emailStatus === 'Extended'
+              ? `<span class="ext-chip" title="Extended before extension history was logged">↻ Extended</span>`
+              : '');
         return `
           <div class="item" style="animation-delay:${Math.min(i, 8) * 40}ms">
             <div class="who">
               <div class="avatar">${esc(initials)}</div>
               <div style="min-width:0">
-                <div class="name">${esc(c.name)}${extChip}</div>
+                <div class="name">${esc(c.name)}</div>
                 <div class="firm">${esc(c.contractor)}</div>
+                ${extChip ? `<div style="margin-top:6px">${extChip}</div>` : ''}
               </div>
             </div>
             <div>
