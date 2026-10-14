@@ -1200,14 +1200,6 @@
           `in ${s.days} day${s.days === 1 ? '' : 's'}`;
         const initials = (c.name || '?').split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
         const payload = esc(JSON.stringify(c));
-        const ext = c.extensions || [];
-        const historyHtml = ext.length
-          ? `<ul class="ext-list">${ext.slice().reverse().map(x =>
-              `<li><span class="ext-date">${esc(x.date.split(' ')[0])}</span> ${esc(x.previous)} → ${esc(x.newValidUntil)}${x.by && x.by !== 'Unknown' ? `<span class="ext-by"> · ${esc(x.by)}</span>` : ''}</li>`
-            ).join('')}</ul>`
-          : (c.emailStatus === 'Extended'
-              ? `<div class="ext-note">Extended · earlier history not logged</div>`
-              : '');
         return `
           <div class="item" style="animation-delay:${Math.min(i, 8) * 40}ms">
             <div class="who">
@@ -1225,7 +1217,6 @@
               <div class="meta-label">Valid until</div>
               <div class="meta-value">${esc(fmtDMY(c.validUntil))}</div>
               <div class="meta-sub">${esc(sub)}</div>
-              ${historyHtml}
             </div>
             <div class="item-actions">
               <span class="pill ${s.key}">${s.label}</span>
