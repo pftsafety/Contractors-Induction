@@ -500,6 +500,28 @@
       border-top-color: var(--teal);
     }
 
+    .ext-list {
+      list-style: none;
+      margin-top: 8px;
+      display: grid;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--ink-2);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ext-list li { line-height: 1.4; }
+
+    .ext-date { font-weight: 600; color: var(--teal); }
+
+    .ext-by { color: var(--ink-3); }
+
+    .ext-note {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
     .ext-chip {
       display: inline-flex;
       align-items: center;
@@ -1102,13 +1124,12 @@
         const initials = (c.name || '?').split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
         const payload = esc(JSON.stringify(c));
         const ext = c.extensions || [];
-        const extTooltip = ext.map(x =>
-          `${x.date}: ${x.previous} → ${x.newValidUntil}${x.by ? ' by ' + x.by : ''}`
-        ).join('\n');
-        const extChip = ext.length
-          ? `<span class="ext-chip" title="${esc(extTooltip)}">↻ Extended ${ext.length}×</span>`
+        const historyHtml = ext.length
+          ? `<ul class="ext-list">${ext.slice().reverse().map(x =>
+              `<li><span class="ext-date">${esc(x.date.split(' ')[0])}</span> ${esc(x.previous)} → ${esc(x.newValidUntil)}${x.by ? `<span class="ext-by"> · ${esc(x.by)}</span>` : ''}</li>`
+            ).join('')}</ul>`
           : (c.emailStatus === 'Extended'
-              ? `<span class="ext-chip" title="Extended before extension history was logged">↻ Extended</span>`
+              ? `<div class="ext-note">Extended · earlier history not logged</div>`
               : '');
         return `
           <div class="item" style="animation-delay:${Math.min(i, 8) * 40}ms">
@@ -1117,7 +1138,6 @@
               <div style="min-width:0">
                 <div class="name">${esc(c.name)}</div>
                 <div class="firm">${esc(c.contractor)}</div>
-                ${extChip ? `<div style="margin-top:6px">${extChip}</div>` : ''}
               </div>
             </div>
             <div>
@@ -1128,6 +1148,7 @@
               <div class="meta-label">Valid until</div>
               <div class="meta-value">${esc(fmtDMY(c.validUntil))}</div>
               <div class="meta-sub">${esc(sub)}</div>
+              ${historyHtml}
             </div>
             <div class="item-actions">
               <span class="pill ${s.key}">${s.label}</span>
