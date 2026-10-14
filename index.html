@@ -432,6 +432,74 @@
 
     .item-actions .btn { padding: 9px 14px; font-size: 13px; }
 
+    /* ===== LOADING STATES ===== */
+    @keyframes shimmer {
+      0% { background-position: 100% 50%; }
+      100% { background-position: 0 50%; }
+    }
+
+    .sk {
+      background: linear-gradient(90deg, #efebe1 25%, #faf8f3 37%, #efebe1 63%);
+      background-size: 400% 100%;
+      animation: shimmer 1.4s ease infinite;
+      border-radius: 6px;
+    }
+
+    .skeleton-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      background: var(--surface);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .sk-avatar { width: 40px; height: 40px; border-radius: 10px; }
+
+    .sk-lines { display: grid; gap: 8px; }
+
+    .sk-line { height: 12px; }
+    .sk-line.w30 { width: 30%; }
+    .sk-line.w40 { width: 40%; }
+    .sk-line.w50 { width: 50%; }
+    .sk-line.w60 { width: 60%; }
+
+    .stat-value.is-loading {
+      color: transparent;
+      display: inline-block;
+      min-width: 72px;
+      background: linear-gradient(90deg, #efebe1 25%, #faf8f3 37%, #efebe1 63%);
+      background-size: 400% 100%;
+      animation: shimmer 1.4s ease infinite;
+      border-radius: 6px;
+    }
+
+    .is-loading {
+      position: relative;
+      color: transparent !important;
+      pointer-events: none;
+    }
+
+    .is-loading::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.45);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    .refresh-btn.is-loading::after {
+      border: 2px solid var(--line-strong);
+      border-top-color: var(--teal);
+    }
+
     .ext-chip {
       display: inline-flex;
       align-items: center;
@@ -672,7 +740,7 @@
           <p>HLL Lifecare · Peroorkada Factory · Safety &amp; Environment</p>
         </div>
       </div>
-      <button class="refresh-btn" onclick="loadDashboard()">↻ Refresh</button>
+      <button class="refresh-btn" id="refreshBtn" onclick="loadDashboard()">↻ Refresh</button>
     </header>
 
     <!-- STATS -->
@@ -724,7 +792,7 @@
           <span class="field-icon">Cert</span>
           <input type="search" id="searchCert" placeholder="Search by certificate no. (HLL/PFT/IND/…)" autocomplete="off" style="padding-left:58px">
         </div>
-        <button class="btn btn-primary" onclick="runSearch()">Search</button>
+        <button class="btn btn-primary" id="searchBtn" onclick="runSearch()">Search</button>
       </div>
 
       <div class="workspace-head">
@@ -850,7 +918,15 @@
     // ============================================================
     // DASHBOARD
     // ============================================================
+    function setBusy(el, busy) {
+      if (!el) return;
+      el.classList.toggle('is-loading', busy);
+      el.disabled = busy;
+    }
+
     async function loadDashboard() {
+      document.querySelectorAll('.stat-value').forEach(el => el.classList.add('is-loading'));
+      setBusy(document.getElementById('refreshBtn'), true);
       try {
         const res = await api('getAllExpiring');
         allContractors = res.data || [];
@@ -858,11 +934,18 @@
         renderCharts();
         if (currentView === 'all') renderList(allContractors);
       } catch (e) {
+        document.querySelectorAll('.stat-value').forEach(el => {
+          el.classList.remove('is-loading');
+          el.textContent = '–';
+        });
         toast(e.message, 'error');
+      } finally {
+        setBusy(document.getElementById('refreshBtn'), false);
       }
     }
 
     function renderStats() {
+      document.querySelectorAll('.stat-value').forEach(el => el.classList.remove('is-loading'));
       let ok = 0, warn = 0, bad = 0;
       allContractors.forEach(c => {
         const s = statusOf(c.validUntil).key;
@@ -971,6 +1054,7 @@
 
       setView('search');
       renderLoading();
+      setBusy(document.getElementById('searchBtn'), true);
       try {
         const res = name
           ? await api('searchByName', { name })
@@ -979,6 +1063,8 @@
       } catch (e) {
         renderEmpty('Something went wrong', e.message);
         toast(e.message, 'error');
+      } finally {
+        setBusy(document.getElementById('searchBtn'), false);
       }
     }
 
@@ -1059,8 +1145,17 @@
     }
 
     function renderLoading() {
-      document.getElementById('resultsList').innerHTML =
-        '<div class="loading"><div class="spinner"></div>Loading…</div>';
+      const skeleton = `
+        <div class="skeleton-item">
+          <div class="who">
+            <div class="sk sk-avatar" style="margin-right:12px"></div>
+            <div class="sk-lines" style="flex:1"><div class="sk sk-line w60"></div><div class="sk sk-line w40"></div></div>
+          </div>
+          <div class="sk-lines"><div class="sk sk-line w50"></div><div class="sk sk-line w60"></div></div>
+          <div class="sk-lines"><div class="sk sk-line w50"></div><div class="sk sk-line w30"></div></div>
+          <div class="sk" style="width:96px;height:30px;border-radius:999px"></div>
+        </div>`;
+      document.getElementById('resultsList').innerHTML = skeleton.repeat(3);
       setText('countLabel', '');
     }
 
