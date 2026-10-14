@@ -687,6 +687,36 @@
       margin-top: 4px;
     }
 
+    .hist-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .hist-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .hist-table td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .hist-table tr:last-child td { border-bottom: none; }
+
+    .hist-wrap { overflow-x: auto; max-height: 360px; overflow-y: auto; }
+
     .officer-field { margin-bottom: 14px; }
 
     .officer-field .k {
@@ -900,6 +930,19 @@
       <div class="sheet-actions">
         <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
         <button class="btn btn-success" id="confirmBtn" onclick="confirmExtend()">Confirm &amp; extend</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY MODAL -->
+  <div class="modal" id="historyModal" onclick="if(event.target===this) closeHistoryModal()">
+    <div class="sheet" style="max-width: 640px;">
+      <h2>Extension history</h2>
+      <p id="hName" style="font-weight: 600; color: var(--ink); margin-bottom: 4px;"></p>
+      <p id="hCert" style="margin-bottom: 18px;"></p>
+      <div id="hBody"></div>
+      <div class="sheet-actions" style="margin-top: 18px;">
+        <button class="btn btn-ghost" onclick="closeHistoryModal()">Close</button>
       </div>
     </div>
   </div>
@@ -1187,6 +1230,7 @@
             <div class="item-actions">
               <span class="pill ${s.key}">${s.label}</span>
               <button class="btn btn-ghost" data-contractor="${payload}" onclick="downloadCardFromBtn(this)">Download card</button>
+              <button class="btn btn-ghost" data-contractor="${payload}" onclick="openHistoryFromBtn(this)">History</button>
               ${s.key === 'bad'
                 ? `<button class="btn btn-success" data-contractor="${payload}" onclick="openExtendFromBtn(this)">Extend</button>`
                 : `<button class="btn btn-ghost" disabled title="Only expired permits can be extended">Extend</button>`}
@@ -1462,6 +1506,56 @@
       }
     }
 
+    // ============================================================
+    // EXTENSION HISTORY POPUP
+    // ============================================================
+    function openHistoryFromBtn(btn) {
+      openHistory(JSON.parse(btn.dataset.contractor));
+    }
+
+    function openHistory(c) {
+      setText('hName', c.name || '–');
+      setText('hCert', c.certNumber || '–');
+
+      const ext = (c.extensions || []).slice().reverse(); // newest first
+      const body = document.getElementById('hBody');
+
+      if (ext.length) {
+        body.innerHTML = `
+          <div class="hist-wrap">
+            <table class="hist-table">
+              <thead>
+                <tr>
+                  <th>Extended on</th>
+                  <th>Previous expiry</th>
+                  <th>New expiry</th>
+                  <th>Changed by</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${ext.map(x => `
+                  <tr>
+                    <td>${esc(x.date)}</td>
+                    <td>${esc(x.previous)}</td>
+                    <td><strong>${esc(x.newValidUntil)}</strong></td>
+                    <td>${esc(x.by || 'Unknown')}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>`;
+      } else if (c.emailStatus === 'Extended') {
+        body.innerHTML = `<div class="empty"><p>Extended before history was logged. No dates are available.</p></div>`;
+      } else {
+        body.innerHTML = `<div class="empty"><p>This permit has not been extended.</p></div>`;
+      }
+
+      document.getElementById('historyModal').classList.add('open');
+    }
+
+    function closeHistoryModal() {
+      document.getElementById('historyModal').classList.remove('open');
+    }
+
     function setText(id, v) { document.getElementById(id).textContent = v; }
 
     function esc(s) {
@@ -1481,7 +1575,7 @@
 
     document.addEventListener('keydown', e => {
       if (e.key === 'Enter' && (e.target.id === 'searchName' || e.target.id === 'searchCert')) runSearch();
-      if (e.key === 'Escape') closeModal();
+      if (e.key === 'Escape') { closeModal(); closeHistoryModal(); }
     });
 
     // ============================================================
