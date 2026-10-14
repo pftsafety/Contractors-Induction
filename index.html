@@ -687,6 +687,35 @@
       margin-top: 4px;
     }
 
+    .officer-field { margin-bottom: 14px; }
+
+    .officer-field .k {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      margin-bottom: 6px;
+    }
+
+    .officer-field input {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      font: inherit;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .officer-field input:focus {
+      outline: none;
+      border-color: var(--teal-2);
+      box-shadow: 0 0 0 4px rgba(15, 94, 88, 0.12);
+    }
+
     .new-expiry {
       background: var(--teal-soft);
       border: 1px solid #bfdcd7;
@@ -854,6 +883,11 @@
           <div class="k">Current expiry</div>
           <div class="v" id="mCurrent">–</div>
         </div>
+      </div>
+
+      <div class="officer-field">
+        <label class="k" for="officerName">Changed by (your name)</label>
+        <input type="text" id="officerName" placeholder="e.g. Safety Officer name" autocomplete="name" maxlength="80">
       </div>
 
       <div class="new-expiry">
@@ -1203,6 +1237,7 @@
       setText('mCert', c.certNumber);
       setText('mCurrent', fmtDMY(c.validUntil));
       setText('mNew', fmtDMY(addMonths(3)));
+      document.getElementById('officerName').value = localStorage.getItem('ci_officer_name') || '';
       document.getElementById('extendModal').classList.add('open');
     }
 
@@ -1213,6 +1248,14 @@
 
     async function confirmExtend() {
       if (!pendingExtend) return;
+      const officerInput = document.getElementById('officerName');
+      const officer = officerInput.value.trim();
+      if (!officer) {
+        toast('Please enter your name in "Changed by"', 'warning');
+        officerInput.focus();
+        return;
+      }
+      localStorage.setItem('ci_officer_name', officer);
       const target = pendingExtend; // keep a copy: closeModal() clears pendingExtend
       const btn = document.getElementById('confirmBtn');
       btn.disabled = true;
@@ -1220,7 +1263,8 @@
       try {
         const res = await api('extendValidity', {
           certNumber: target.certNumber,
-          rowIndex: target.rowIndex
+          rowIndex: target.rowIndex,
+          officer: officer
         });
         closeModal();
         toast(`Extended for ${target.name} until ${res.newValidUntil}`, 'success');
