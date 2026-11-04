@@ -16,17 +16,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #f5f6f8;
+      --bg: #f1f3f6;
       --surface: #ffffff;
-      --surface-2: #f8fafb;
-      --line: #e5e8ee;
-      --line-2: #d4d9e2;
-      --ink: #172033;
-      --ink-2: #475467;
-      --ink-3: #667085;
-      --teal: #0f766e;
-      --teal-2: #115e59;
-      --teal-soft: #e6f4f2;
+      --surface-2: #f7f8fa;
+      --line: #e2e6ec;
+      --line-2: #cdd3dc;
+      --ink: #1b2430;
+      --ink-2: #4b5563;
+      --ink-3: #6b7280;
+      --teal: #2563eb;
+      --teal-2: #1d4ed8;
+      --teal-soft: #e8f0fe;
       --ok: #2e7d5b;
       --ok-soft: #e8f5ee;
       --warn: #a86a12;
@@ -218,8 +218,8 @@
     .btn-primary { background: var(--teal); color: #fff; box-shadow: var(--shadow); }
     .btn-primary:hover:not(:disabled) { background: var(--teal-2); }
 
-    .btn-accent { background: var(--teal-soft); color: var(--teal-2); border-color: #bfe2dc; }
-    .btn-accent:hover:not(:disabled) { background: #d6eeea; }
+    .btn-accent { background: var(--teal-soft); color: var(--teal-2); border-color: #bfd3f7; }
+    .btn-accent:hover:not(:disabled) { background: #d5e3fb; }
 
     .btn-ghost { background: var(--surface); color: var(--ink); border-color: var(--line-2); }
     .btn-ghost:hover:not(:disabled) { background: var(--surface-2); border-color: #bcc4d1; }
@@ -242,7 +242,7 @@
     input:focus {
       outline: none;
       border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
     }
 
     input::placeholder { color: #98a2b3; }
@@ -461,7 +461,7 @@
 
     .chip:hover { border-color: #aab4c4; color: var(--ink); }
 
-    .chip.active { background: var(--teal-soft); border-color: #9fd3cb; color: var(--teal-2); font-weight: 600; }
+    .chip.active { background: var(--teal-soft); border-color: #a9c4f5; color: var(--teal-2); font-weight: 600; }
 
     .chip-count {
       font-size: 12px;
@@ -625,7 +625,7 @@
 
     .newdate {
       background: var(--teal-soft);
-      border: 1px solid #bfe2dc;
+      border: 1px solid #bfd3f7;
       border-radius: 10px;
       padding: 16px;
       text-align: center;
@@ -702,7 +702,7 @@
     }
 
     .toast.show { opacity: 1; transform: translate(-50%, 0); }
-    .toast.success { background: #1f5f47; }
+    .toast.success { background: #1e5a3c; }
     .toast.error { background: #8f1d15; }
     .toast.warning { background: #7a4f0e; }
 
@@ -1015,7 +1015,7 @@
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypc8MItURjTPEvE3FcpIvFMmjqdNwVvAjOpI2Vh0PL4OKFrC3AKbTDU0aKqhxKRWfI/exec';
     const OFFICER_KEY = 'ci_officer_name';
 
-    const COLORS = { ok: '#2e7d5b', warn: '#c98a1b', bad: '#b42318', navy: '#0f766e', grid: '#eef1f5' };
+    const COLORS = { ok: '#2e7d5b', warn: '#c98a1b', bad: '#b42318', navy: '#2563eb', grid: '#eef1f5' };
 
     let allContractors = [];   // full dataset (dashboard + show all)
     let lastItems = [];        // current search or list result
@@ -1629,7 +1629,7 @@
         const cx = W / 2;
 
         // Page
-        ctx.fillStyle = '#f5f6f8';
+        ctx.fillStyle = '#f1f3f6';
         ctx.fillRect(0, 0, W, H);
 
         // Card
@@ -1640,7 +1640,7 @@
         ctx.clip();
 
         // Header band
-        ctx.fillStyle = '#0f5e58';
+        ctx.fillStyle = '#1d4ed8';
         ctx.fillRect(pad, pad, W - pad * 2, 230);
         ctx.restore();
 
@@ -1649,7 +1649,7 @@
         ctx.font = '800 58px Fraunces, Arial, sans-serif';
         ctx.fillText('INDUCTION COMPLETION PASS', cx, pad + 110, W - pad * 2 - 80);
         ctx.font = '500 30px Inter, Arial, sans-serif';
-        ctx.fillStyle = '#cfe9e5';
+        ctx.fillStyle = '#dbe7ff';
         ctx.fillText('HLL Lifecare Limited · Peroorkada Factory', cx, pad + 170);
 
         // Holder
