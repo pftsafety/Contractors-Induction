@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Contractors Induction Portal</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f5e58'/><text x='50' y='64' font-size='44' font-weight='bold' fill='%23f5f1e8' text-anchor='middle' font-family='Georgia'>CI</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f1d33'/><text x='50' y='64' font-size='42' font-weight='bold' fill='%23fb923c' text-anchor='middle' font-family='Arial'>CI</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://pftsafety.github.io/pftsafety/config.js"></script>
   <script src="https://pftsafety.github.io/pftsafety/auth-guard.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
@@ -16,110 +16,235 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --paper: #f6f3ec;
+      --bg: #f2f4f8;
       --surface: #ffffff;
-      --surface-2: #fbfaf6;
-      --line: #e7e2d6;
-      --line-strong: #d6cfbd;
-      --ink: #1d1b16;
-      --ink-2: #5d5a50;
-      --ink-3: #8f8a7c;
-      --teal: #0f5e58;
-      --teal-2: #17807a;
-      --teal-soft: #e3f0ee;
-      --ok: #2f7d4f;
-      --ok-soft: #e6f2ea;
-      --warn: #b7791f;
-      --warn-soft: #fbf1dc;
-      --bad: #b23b2e;
-      --bad-soft: #f9e6e3;
-      --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
-      --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-      --radius: 12px;
-      --radius-lg: 18px;
-      --shadow: 0 1px 2px rgba(29, 27, 22, 0.04), 0 6px 18px rgba(29, 27, 22, 0.05);
-      --shadow-lg: 0 14px 36px rgba(29, 27, 22, 0.14);
+      --surface-2: #f8fafc;
+      --line: #e3e7ef;
+      --line-2: #cfd6e3;
+      --ink: #0f172a;
+      --ink-2: #475569;
+      --ink-3: #64748b;
+      --navy: #0f1d33;
+      --navy-2: #1a2b4a;
+      --navy-soft: #e8edf7;
+      --accent: #c2410c;
+      --accent-2: #ea580c;
+      --accent-soft: #fff1e8;
+      --ok: #15803d;
+      --ok-soft: #e7f6ec;
+      --warn: #b45309;
+      --warn-soft: #fdf3e1;
+      --bad: #b91c1c;
+      --bad-soft: #fde9e9;
+      --radius: 14px;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 4px 14px rgba(15, 23, 42, 0.05);
+      --shadow-lg: 0 14px 40px rgba(15, 23, 42, 0.18);
+      --sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
     }
 
     html, body {
       min-height: 100%;
       font-family: var(--sans);
       color: var(--ink);
-      background: var(--paper);
+      background: var(--bg);
       -webkit-font-smoothing: antialiased;
     }
 
-    .wrap {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 32px 22px 64px;
-      padding-top: calc(32px + env(safe-area-inset-top, 0px));
+    button, input { font: inherit; }
+
+    /* ===================== LAYOUT ===================== */
+    .app {
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+      min-height: 100vh;
     }
 
-    /* ===== HEADER ===== */
-    .topbar {
+    .sidebar {
+      background: var(--navy);
+      color: #c9d3e6;
+      padding: 26px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; padding: 0 8px; }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #fb923c, #ea580c);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-name { color: #fff; font-weight: 800; font-size: 16px; letter-spacing: -0.2px; }
+    .brand-sub { font-size: 12px; color: #93a3bf; margin-top: 2px; }
+
+    .nav { display: grid; gap: 4px; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      background: none;
+      border: none;
+      color: #c9d3e6;
+      padding: 11px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+
+    .nav-item:hover { background: var(--navy-2); color: #fff; }
+
+    .nav-item.active { background: var(--navy-2); color: #fff; box-shadow: inset 3px 0 0 #fb923c; }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .6;
+      flex-shrink: 0;
+    }
+
+    .nav-item.active .nav-dot { opacity: 1; background: #fb923c; }
+
+    .sidebar-foot {
+      margin-top: auto;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #7d8ba6;
+      padding: 0 8px;
+    }
+
+    .main {
+      padding: 30px 36px 60px;
+      min-width: 0;
+    }
+
+    .page-head {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
       gap: 16px;
-      padding-bottom: 22px;
-      margin-bottom: 26px;
-      border-bottom: 1px solid var(--line);
+      margin-bottom: 24px;
       flex-wrap: wrap;
     }
 
-    .brand { display: flex; align-items: center; gap: 16px; }
-
-    .brand-mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: var(--teal);
-      color: var(--paper);
-      display: grid;
-      place-items: center;
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: 17px;
-      letter-spacing: 0.5px;
-    }
-
-    .brand h1 {
-      font-family: var(--serif);
+    .page-head h1 {
       font-size: 26px;
-      font-weight: 700;
-      letter-spacing: -0.4px;
-      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      line-height: 1.15;
     }
 
-    .brand p {
-      font-size: 13px;
-      color: var(--ink-2);
-      margin-top: 4px;
+    .page-head p { color: var(--ink-3); font-size: 14px; margin-top: 4px; }
+
+    .view { display: none; }
+    .view.active { display: block; animation: fadeUp .3s ease; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .refresh-btn {
+    /* ===================== COMPONENTS ===================== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .card + .card { margin-top: 18px; }
+
+    .card-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .card-head h2 { font-size: 16px; font-weight: 800; letter-spacing: -0.2px; }
+
+    .muted { color: var(--ink-3); font-size: 13px; }
+
+    .btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: var(--surface);
-      border: 1px solid var(--line-strong);
-      color: var(--ink);
-      font: inherit;
+      justify-content: center;
+      gap: 6px;
+      padding: 11px 18px;
+      border-radius: 10px;
+      border: 1px solid transparent;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: border-color .2s, background .2s;
+      white-space: nowrap;
+      position: relative;
+      transition: background .2s, border-color .2s, color .2s, transform .15s, box-shadow .2s;
     }
 
-    .refresh-btn:hover { border-color: var(--teal); color: var(--teal); }
+    .btn:active { transform: scale(.98); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 
-    /* ===== STATS ===== */
+    .btn-primary { background: var(--navy); color: #fff; }
+    .btn-primary:hover { background: var(--navy-2); }
+
+    .btn-accent { background: var(--accent-2); color: #fff; }
+    .btn-accent:hover { background: var(--accent); }
+
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--line-2);
+    }
+    .btn-ghost:hover { background: var(--surface-2); border-color: #b8c1d1; }
+
+    .btn-sm { padding: 8px 14px; font-size: 13px; border-radius: 9px; }
+
+    .btn-icon { padding: 8px 12px; font-size: 16px; line-height: 1; }
+
+    .field-input, input[type="search"], input[type="text"], input[type="email"], input[type="tel"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--line-2);
+      background: var(--surface);
+      font-size: 14px;
+      color: var(--ink);
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #5b7cb5;
+      box-shadow: 0 0 0 4px rgba(91, 124, 181, 0.16);
+    }
+
+    input::placeholder { color: #94a3b8; }
+
+    /* ===================== DASHBOARD ===================== */
     .stats {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 14px;
       margin-bottom: 18px;
     }
@@ -127,290 +252,126 @@
     .stat {
       background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      padding: 20px 22px;
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
+      padding: 18px 20px;
+      border-top: 3px solid var(--navy);
     }
 
-    .stat::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 4px;
-      background: var(--teal);
-    }
-
-    .stat.ok::before { background: var(--ok); }
-    .stat.warn::before { background: var(--warn); }
-    .stat.bad::before { background: var(--bad); }
+    .stat.ok { border-top-color: var(--ok); }
+    .stat.warn { border-top-color: var(--warn); }
+    .stat.bad { border-top-color: var(--bad); }
 
     .stat-label {
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
       color: var(--ink-3);
       text-transform: uppercase;
-      letter-spacing: 0.9px;
+      letter-spacing: 0.7px;
     }
 
     .stat-value {
-      font-family: var(--serif);
-      font-size: 34px;
-      font-weight: 700;
-      margin-top: 6px;
-      letter-spacing: -0.5px;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      margin-top: 8px;
       line-height: 1;
     }
 
-    /* ===== CHARTS ===== */
-    .charts {
+    .grid-2 {
       display: grid;
-      grid-template-columns: 1fr 1.6fr;
-      gap: 14px;
-      margin-bottom: 26px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+      gap: 18px;
     }
 
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      box-shadow: var(--shadow);
-    }
+    .chart-box { position: relative; height: 250px; }
 
-    .card-head { margin-bottom: 14px; }
+    /* ===================== ROWS (shared by lists) ===================== */
+    .rows { display: grid; gap: 10px; }
 
-    .card-title {
-      font-family: var(--serif);
-      font-size: 17px;
-      font-weight: 600;
-      letter-spacing: -0.2px;
-    }
-
-    .card-sub {
-      font-size: 12px;
-      color: var(--ink-3);
-      margin-top: 3px;
-    }
-
-    .chart-box { position: relative; height: 240px; }
-
-    /* ===== WORKSPACE ===== */
-    .workspace {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .toolbar {
-      padding: 20px 22px;
-      border-bottom: 1px solid var(--line);
+    .row {
       display: grid;
-      grid-template-columns: 1fr 1fr auto;
-      gap: 12px;
-      align-items: center;
-      background: var(--surface-2);
-    }
-
-    .field { position: relative; display: flex; align-items: center; }
-
-    .field-icon {
-      position: absolute;
-      left: 14px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--ink-3);
-      pointer-events: none;
-    }
-
-    .field input {
-      width: 100%;
-      padding: 12px 14px 12px 40px;
-      border-radius: 10px;
-      border: 1px solid var(--line-strong);
-      background: var(--surface);
-      font: inherit;
-      font-size: 14px;
-      color: var(--ink);
-      transition: border-color .2s, box-shadow .2s;
-    }
-
-    .field input::placeholder { color: var(--ink-3); }
-
-    .field input:focus {
-      outline: none;
-      border-color: var(--teal-2);
-      box-shadow: 0 0 0 4px rgba(15, 94, 88, 0.12);
-    }
-
-    .btn {
-      padding: 12px 18px;
-      border-radius: 10px;
-      border: 1px solid transparent;
-      font: inherit;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .2s, border-color .2s, color .2s, transform .15s;
-      white-space: nowrap;
-    }
-
-    .btn:active { transform: scale(.98); }
-
-    .btn-primary { background: var(--teal); color: var(--paper); }
-    .btn-primary:hover { background: #0b4a45; }
-
-    .btn-success { background: var(--ok); color: #fff; }
-    .btn-success:hover { background: #256a41; }
-
-    .btn-ghost {
-      background: var(--surface);
-      color: var(--ink);
-      border-color: var(--line-strong);
-    }
-    .btn-ghost:hover { background: var(--surface-2); }
-
-    .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-
-    .tabs {
-      display: inline-flex;
-      border-bottom: 1px solid var(--line);
-      gap: 22px;
-    }
-
-    .tab {
-      border: none;
-      background: transparent;
-      padding: 8px 0 12px;
-      font: inherit;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--ink-3);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
-      transition: color .2s, border-color .2s;
-    }
-
-    .tab:hover { color: var(--ink); }
-
-    .tab.active { color: var(--teal); border-bottom-color: var(--teal); }
-
-    .workspace-head {
-      padding: 0 22px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .workspace-head .tabs { border-bottom: none; }
-
-    .count {
-      font-size: 12px;
-      color: var(--ink-3);
-      font-weight: 600;
-      padding-bottom: 12px;
-    }
-
-    .list {
-      padding: 14px 22px 22px;
-      display: grid;
-      gap: 10px;
-      min-height: 200px;
-    }
-
-    .item {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      background: var(--surface);
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr auto;
+      grid-template-columns: 44px minmax(0, 1.6fr) minmax(0, 1fr) 128px auto;
       gap: 16px;
       align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      box-shadow: var(--shadow);
+      animation: rise .3s ease both;
       transition: border-color .2s, box-shadow .2s;
-      animation: rise .35s ease both;
     }
 
-    .item:hover {
-      border-color: var(--line-strong);
-      box-shadow: var(--shadow);
-    }
+    .row:hover { border-color: var(--line-2); box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08); }
 
     @keyframes rise {
-      from { opacity: 0; transform: translateY(5px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .who { display: flex; align-items: center; min-width: 0; gap: 12px; }
-
     .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--navy-soft);
+      color: var(--navy);
       display: grid;
       place-items: center;
-      font-family: var(--serif);
-      font-weight: 700;
+      font-weight: 800;
       font-size: 14px;
-      background: var(--teal-soft);
-      color: var(--teal);
-      flex-shrink: 0;
     }
 
-    .name {
-      font-weight: 600;
+    .row-name {
+      font-weight: 700;
       font-size: 15px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .firm {
-      font-size: 12px;
-      color: var(--ink-2);
-      margin-top: 2px;
+    .row-sub {
+      font-size: 12.5px;
+      color: var(--ink-3);
+      margin-top: 3px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .meta-label {
-      font-size: 10px;
-      font-weight: 600;
+    .row-date .label {
+      font-size: 10.5px;
+      font-weight: 700;
       color: var(--ink-3);
       text-transform: uppercase;
-      letter-spacing: 0.9px;
+      letter-spacing: 0.7px;
     }
 
-    .meta-value {
+    .row-date .value {
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
       margin-top: 4px;
-      color: var(--ink);
       font-variant-numeric: tabular-nums;
     }
 
-    .meta-sub {
-      font-size: 12px;
-      color: var(--ink-2);
-      margin-top: 2px;
+    .row-date .sub { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+
+    .row-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
     }
 
     .pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 10px;
+      padding: 5px 11px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
+      justify-self: start;
     }
 
     .pill::before {
@@ -425,57 +386,315 @@
     .pill.warn { background: var(--warn-soft); color: var(--warn); }
     .pill.bad { background: var(--bad-soft); color: var(--bad); }
 
-    .item-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: flex-end;
+    /* Row menu */
+    .menu { position: relative; }
+
+    .menu-list {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      min-width: 210px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      padding: 6px;
+      z-index: 60;
     }
 
-    .item-actions .btn { padding: 9px 14px; font-size: 13px; }
+    .menu-list.open { display: block; animation: fadeUp .15s ease; }
 
-    /* ===== LOADING STATES ===== */
+    .menu-list button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .menu-list button:hover { background: var(--navy-soft); color: var(--navy); }
+
+    /* Search and filters */
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 10px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line-2);
+      background: var(--surface);
+      color: var(--ink-2);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+
+    .chip:hover { border-color: #8fa0bf; color: var(--navy); }
+
+    .chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+    .chip-count {
+      font-size: 11px;
+      font-weight: 800;
+      background: var(--surface-2);
+      color: var(--ink-2);
+      border-radius: 999px;
+      padding: 1px 7px;
+    }
+
+    .chip.active .chip-count { background: rgba(255, 255, 255, 0.18); color: #fff; }
+
+    .list-meta {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-3);
+      margin: 18px 2px 12px;
+      min-height: 18px;
+    }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 48px 20px;
+      background: var(--surface);
+      border: 1px dashed var(--line-2);
+      border-radius: var(--radius);
+    }
+
+    .empty-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--navy-soft);
+      color: var(--navy);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 14px;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .empty h3 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+    .empty p { font-size: 13px; color: var(--ink-3); }
+
+    /* New induction form */
+    .form-card { max-width: 820px; }
+    .form-card h2 { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 6px; }
+    .form-card > .muted { display: block; margin-bottom: 22px; line-height: 1.5; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .field { display: grid; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-2);
+    }
+
+    .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 14px;
+      color: var(--ink-2);
+      line-height: 1.5;
+      margin-bottom: 22px;
+      cursor: pointer;
+    }
+
+    .check input { margin-top: 3px; accent-color: var(--navy); width: 16px; height: 16px; }
+
+    .form-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+    /* Modals */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal.open { display: flex; animation: fadeUp .2s ease; }
+
+    .sheet {
+      background: var(--surface);
+      border-radius: 18px;
+      box-shadow: var(--shadow-lg);
+      padding: 28px;
+      width: 100%;
+      max-width: 480px;
+      animation: fadeUp .25s ease;
+    }
+
+    .sheet h2 { font-size: 19px; font-weight: 800; letter-spacing: -0.3px; }
+    .sheet > .muted { display: block; margin: 6px 0 20px; line-height: 1.5; }
+
+    .facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .fact {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .fact.full { grid-column: 1 / -1; }
+
+    .fact .k {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    .fact .v { font-size: 14px; font-weight: 700; margin-top: 4px; }
+
+    .officer { margin-bottom: 14px; }
+    .officer label { display: block; font-size: 12px; font-weight: 700; color: var(--ink-2); margin-bottom: 7px; }
+
+    .newdate {
+      background: var(--accent-soft);
+      border: 1px solid #fed7b5;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .newdate .k {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    .newdate .v {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-top: 4px;
+      letter-spacing: -0.4px;
+    }
+
+    .sheet-note { font-size: 12px; color: var(--ink-3); text-align: center; margin-bottom: 20px; }
+
+    .sheet-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+    .hist-wrap { overflow-x: auto; max-height: 360px; overflow-y: auto; }
+
+    .hist-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+    .hist-table th {
+      text-align: left;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .hist-table td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .hist-table tr:last-child td { border-bottom: none; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 26px;
+      transform: translate(-50%, 16px);
+      background: var(--navy);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s ease;
+      z-index: 2000;
+      max-width: calc(100% - 32px);
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .toast.success { background: #166534; }
+    .toast.error { background: #991b1b; }
+    .toast.warning { background: #92400e; }
+
+    /* Loading states */
     @keyframes shimmer {
       0% { background-position: 100% 50%; }
       100% { background-position: 0 50%; }
     }
 
     .sk {
-      background: linear-gradient(90deg, #efebe1 25%, #faf8f3 37%, #efebe1 63%);
+      background: linear-gradient(90deg, #e9edf4 25%, #f7f9fc 37%, #e9edf4 63%);
       background-size: 400% 100%;
       animation: shimmer 1.4s ease infinite;
       border-radius: 6px;
     }
 
-    .skeleton-item {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      background: var(--surface);
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr auto;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .sk-avatar { width: 40px; height: 40px; border-radius: 10px; }
-
+    .sk-avatar { width: 44px; height: 44px; border-radius: 12px; }
     .sk-lines { display: grid; gap: 8px; }
-
     .sk-line { height: 12px; }
-    .sk-line.w30 { width: 30%; }
-    .sk-line.w40 { width: 40%; }
-    .sk-line.w50 { width: 50%; }
-    .sk-line.w60 { width: 60%; }
+    .w30 { width: 30%; } .w40 { width: 40%; } .w50 { width: 50%; } .w60 { width: 60%; }
 
     .stat-value.is-loading {
       color: transparent;
       display: inline-block;
       min-width: 72px;
-      background: linear-gradient(90deg, #efebe1 25%, #faf8f3 37%, #efebe1 63%);
+      border-radius: 6px;
+      background: linear-gradient(90deg, #e9edf4 25%, #f7f9fc 37%, #e9edf4 63%);
       background-size: 400% 100%;
       animation: shimmer 1.4s ease infinite;
-      border-radius: 6px;
     }
 
     .is-loading {
@@ -491,511 +710,236 @@
       margin: auto;
       width: 16px;
       height: 16px;
-      border: 2px solid rgba(255, 255, 255, 0.45);
-      border-top-color: #ffffff;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-top-color: #fff;
       border-radius: 50%;
       animation: spin .7s linear infinite;
     }
 
-    .refresh-btn.is-loading::after {
-      border: 2px solid var(--line-strong);
-      border-top-color: var(--teal);
-    }
-
-    .ext-list {
-      list-style: none;
-      margin-top: 8px;
-      display: grid;
-      gap: 4px;
-      font-size: 12px;
-      color: var(--ink-2);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .ext-list li { line-height: 1.4; }
-
-    .ext-date { font-weight: 600; color: var(--teal); }
-
-    .ext-by { color: var(--ink-3); }
-
-    .ext-note {
-      margin-top: 8px;
-      font-size: 11px;
-      color: var(--ink-3);
-    }
-
-    .ext-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-left: 0;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: var(--teal-soft);
-      color: var(--teal);
-      font-size: 11px;
-      font-weight: 600;
-      vertical-align: middle;
-      cursor: help;
-      white-space: nowrap;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 56px 20px;
-      color: var(--ink-2);
-    }
-
-    .empty-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
-      background: var(--teal-soft);
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      margin: 0 auto 14px;
-      color: var(--teal);
-      font-weight: 700;
-    }
-
-    .empty h3 {
-      font-family: var(--serif);
-      font-size: 18px;
-      color: var(--ink);
-      margin-bottom: 4px;
-    }
-
-    .empty p { font-size: 13px; }
-
-    .loading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 48px;
-      color: var(--ink-2);
-      font-size: 14px;
-    }
-
-    .spinner {
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--line);
-      border-top-color: var(--teal);
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
+    .btn-ghost.is-loading::after {
+      border: 2px solid var(--line-2);
+      border-top-color: var(--navy);
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ===== TOAST ===== */
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 24px;
-      transform: translate(-50%, 16px);
-      background: var(--ink);
-      color: var(--paper);
-      padding: 12px 18px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 500;
-      box-shadow: var(--shadow-lg);
-      opacity: 0;
-      pointer-events: none;
-      transition: all .3s ease;
-      z-index: 2000;
-      max-width: calc(100% - 32px);
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 1100px) {
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-2 { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 44px minmax(0, 1fr) auto; }
+      .row-date, .row-status { grid-column: 2; }
+      .row-status { justify-self: start; }
+      .row-actions { grid-column: 2 / -1; justify-content: flex-start; }
     }
 
-    .toast.show { opacity: 1; transform: translate(-50%, 0); }
-    .toast.success { background: var(--ok); }
-    .toast.error { background: var(--bad); }
-    .toast.warning { background: var(--warn); }
-
-    /* ===== MODAL ===== */
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(29, 27, 22, 0.4);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 1000;
-    }
-
-    .modal.open { display: flex; animation: fade .2s ease-out; }
-
-    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-
-    .sheet {
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      width: 100%;
-      max-width: 460px;
-      box-shadow: var(--shadow-lg);
-      animation: pop .25s ease;
-    }
-
-    @keyframes pop {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: none; }
-    }
-
-    .sheet h2 {
-      font-family: var(--serif);
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .sheet > p {
-      font-size: 13px;
-      color: var(--ink-2);
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .info {
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 12px 14px;
-    }
-
-    .info.full { grid-column: 1 / -1; }
-
-    .info .k {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--ink-3);
-      text-transform: uppercase;
-      letter-spacing: 0.9px;
-    }
-
-    .info .v {
-      font-size: 14px;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-
-    .hist-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-
-    .hist-table th {
-      text-align: left;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--ink-3);
-      text-transform: uppercase;
-      letter-spacing: 0.9px;
-      padding: 8px 10px;
-      border-bottom: 1px solid var(--line);
-      white-space: nowrap;
-    }
-
-    .hist-table td {
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--line);
-      color: var(--ink);
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
-
-    .hist-table tr:last-child td { border-bottom: none; }
-
-    .hist-wrap { overflow-x: auto; max-height: 360px; overflow-y: auto; }
-
-    .nf-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px 16px;
-      margin-bottom: 16px;
-    }
-
-    .nf-field { display: grid; gap: 6px; }
-    .nf-field.full { grid-column: 1 / -1; }
-
-    .nf-field label {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--ink-3);
-      text-transform: uppercase;
-      letter-spacing: 0.9px;
-    }
-
-    .nf-field input {
-      padding: 11px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--line-strong);
-      background: var(--surface);
-      font: inherit;
-      font-size: 14px;
-      color: var(--ink);
-    }
-
-    .nf-field input:focus {
-      outline: none;
-      border-color: var(--teal-2);
-      box-shadow: 0 0 0 4px rgba(15, 94, 88, 0.12);
-    }
-
-    .nf-check {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      font-size: 13px;
-      color: var(--ink-2);
-      line-height: 1.5;
-      margin-bottom: 18px;
-      cursor: pointer;
-    }
-
-    .nf-check input { margin-top: 3px; accent-color: var(--teal); }
-
-    .nf-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-
-    .nf-note {
-      margin-top: 14px;
-      font-size: 12px;
-      color: var(--ink-3);
+    @media (max-width: 820px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        position: static;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        flex-wrap: wrap;
+      }
+      .nav { display: flex; gap: 6px; overflow-x: auto; width: 100%; }
+      .nav-item { width: auto; white-space: nowrap; padding: 9px 12px; }
+      .sidebar-foot { display: none; }
+      .brand { padding: 0; }
+      .main { padding: 22px 16px 48px; }
+      .search-row { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .facts { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 560px) {
-      .nf-grid { grid-template-columns: 1fr; }
-    }
-
-    .officer-field { margin-bottom: 14px; }
-
-    .officer-field .k {
-      display: block;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--ink-3);
-      text-transform: uppercase;
-      letter-spacing: 0.9px;
-      margin-bottom: 6px;
-    }
-
-    .officer-field input {
-      width: 100%;
-      padding: 11px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--line-strong);
-      background: var(--surface);
-      font: inherit;
-      font-size: 14px;
-      color: var(--ink);
-    }
-
-    .officer-field input:focus {
-      outline: none;
-      border-color: var(--teal-2);
-      box-shadow: 0 0 0 4px rgba(15, 94, 88, 0.12);
-    }
-
-    .new-expiry {
-      background: var(--teal-soft);
-      border: 1px solid #bfdcd7;
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      margin-bottom: 14px;
-    }
-
-    .new-expiry .k {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--teal);
-      text-transform: uppercase;
-      letter-spacing: 0.9px;
-    }
-
-    .new-expiry .v {
-      font-family: var(--serif);
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--teal);
-      margin-top: 4px;
-    }
-
-    .note {
-      font-size: 12px;
-      color: var(--ink-3);
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .sheet-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-
-    .sheet-actions .btn { min-width: 120px; }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 980px) {
-      .stats { grid-template-columns: repeat(2, 1fr); }
-      .charts { grid-template-columns: 1fr; }
-      .toolbar { grid-template-columns: 1fr; }
-      .item { grid-template-columns: 1fr 1fr; }
-      .item-actions { grid-column: 1 / -1; align-items: stretch; }
-      .item-actions .btn { width: 100%; }
-    }
-
-    @media (max-width: 560px) {
-      .wrap { padding: 22px 14px 48px; }
-      .brand h1 { font-size: 22px; }
       .stats { gap: 10px; }
-      .stat { padding: 14px 16px; }
+      .stat { padding: 14px; }
       .stat-value { font-size: 26px; }
-      .item { grid-template-columns: 1fr; }
-      .info-grid { grid-template-columns: 1fr; }
-      .tabs { width: 100%; }
-      .tab { flex: 1; text-align: center; }
+      .row { grid-template-columns: 1fr; }
+      .avatar { display: none; }
+      .row-date, .row-status, .row-actions { grid-column: 1; }
+      .row-actions { justify-content: stretch; }
+      .row-actions .btn-accent, .row-actions .btn-ghost { flex: 1; }
+      .menu { flex-shrink: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="app">
 
-    <!-- HEADER -->
-    <header class="topbar">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
       <div class="brand">
         <div class="brand-mark">CI</div>
         <div>
-          <h1>Contractors Induction</h1>
-          <p>HLL Lifecare · Peroorkada Factory · Safety &amp; Environment</p>
+          <div class="brand-name">Induction</div>
+          <div class="brand-sub">Safety &amp; Environment</div>
         </div>
-      </div>
-      <button class="refresh-btn" id="refreshBtn" onclick="loadDashboard()">↻ Refresh</button>
-    </header>
-
-    <!-- STATS -->
-    <section class="stats">
-      <div class="stat">
-        <div class="stat-label">Total</div>
-        <div class="stat-value" id="statTotal">–</div>
-      </div>
-      <div class="stat ok">
-        <div class="stat-label">Active</div>
-        <div class="stat-value" id="statActive">–</div>
-      </div>
-      <div class="stat warn">
-        <div class="stat-label">Expiring ≤ 30 days</div>
-        <div class="stat-value" id="statExpiring">–</div>
-      </div>
-      <div class="stat bad">
-        <div class="stat-label">Expired</div>
-        <div class="stat-value" id="statExpired">–</div>
-      </div>
-    </section>
-
-    <!-- CHARTS -->
-    <section class="charts">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-title">Status overview</div>
-          <div class="card-sub">Share of all contractors</div>
-        </div>
-        <div class="chart-box"><canvas id="statusChart"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <div class="card-title">Expiry timeline</div>
-          <div class="card-sub">Validity end dates, next six months</div>
-        </div>
-        <div class="chart-box"><canvas id="timelineChart"></canvas></div>
-      </div>
-    </section>
-
-    <!-- WORKSPACE -->
-    <section class="workspace">
-      <div class="toolbar">
-        <div class="field">
-          <span class="field-icon">Name</span>
-          <input type="search" id="searchName" placeholder="Search by contractor name" autocomplete="off" style="padding-left:58px">
-        </div>
-        <div class="field">
-          <span class="field-icon">Cert</span>
-          <input type="search" id="searchCert" placeholder="Search by certificate no. (HLL/PFT/IND/…)" autocomplete="off" style="padding-left:58px">
-        </div>
-        <button class="btn btn-primary" id="searchBtn" onclick="runSearch()">Search</button>
       </div>
 
-      <div class="workspace-head">
-        <div class="tabs">
-          <button class="tab active" data-view="search">Search results</button>
-          <button class="tab" data-view="all">All contractors</button>
-          <button class="tab" data-view="new">+ New induction</button>
-        </div>
-        <div class="count" id="countLabel"></div>
-      </div>
+      <nav class="nav" aria-label="Main">
+        <button class="nav-item active" data-nav="dashboard" onclick="showView('dashboard')"><span class="nav-dot"></span>Dashboard</button>
+        <button class="nav-item" data-nav="contractors" onclick="showView('contractors')"><span class="nav-dot"></span>Contractors</button>
+        <button class="nav-item" data-nav="new" onclick="showView('new')"><span class="nav-dot"></span>New induction</button>
+      </nav>
 
-      <div class="list" id="resultsList">
-        <div class="empty">
-          <div class="empty-icon">?</div>
-          <h3>Search for a contractor</h3>
-          <p>Enter a name or certificate number above, or switch to “All contractors”.</p>
+      <div class="sidebar-foot">HLL Lifecare Ltd<br>Peroorkada Factory</div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <header class="page-head">
+        <div>
+          <h1 id="pageTitle">Dashboard</h1>
+          <p id="pageSub">Induction permit overview</p>
         </div>
-      </div>
-    </section>
+        <button class="btn btn-ghost" id="refreshBtn" onclick="refreshAll()">Refresh</button>
+      </header>
+
+      <!-- DASHBOARD -->
+      <section class="view active" id="view-dashboard">
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Total</div>
+            <div class="stat-value" id="statTotal">–</div>
+          </div>
+          <div class="stat ok">
+            <div class="stat-label">Active</div>
+            <div class="stat-value" id="statActive">–</div>
+          </div>
+          <div class="stat warn">
+            <div class="stat-label">Expiring in 30 days</div>
+            <div class="stat-value" id="statExpiring">–</div>
+          </div>
+          <div class="stat bad">
+            <div class="stat-label">Expired</div>
+            <div class="stat-value" id="statExpired">–</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head">
+              <h2>Status</h2>
+              <span class="muted">All contractors</span>
+            </div>
+            <div class="chart-box"><canvas id="statusChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h2>Expiries, next 6 months</h2>
+              <span class="muted">By validity end date</span>
+            </div>
+            <div class="chart-box"><canvas id="timelineChart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2>Needs attention</h2>
+            <span class="muted">Expired, or expiring within 30 days</span>
+          </div>
+          <div class="rows" id="attentionList"></div>
+        </div>
+      </section>
+
+      <!-- CONTRACTORS -->
+      <section class="view" id="view-contractors">
+        <div class="card">
+          <div class="search-row">
+            <input type="search" id="q" placeholder="Search by name, or certificate number (HLL/PFT/IND/…)" autocomplete="off" aria-label="Search contractors">
+            <button class="btn btn-primary" id="searchBtn" onclick="runSearch()">Search</button>
+            <button class="btn btn-ghost" onclick="showAll()">Show all</button>
+          </div>
+          <div class="filters" id="filters"></div>
+        </div>
+
+        <div class="list-meta" id="countLabel"></div>
+        <div class="rows" id="resultsList"></div>
+      </section>
+
+      <!-- NEW INDUCTION -->
+      <section class="view" id="view-new">
+        <div class="card form-card">
+          <h2>Register a contractor</h2>
+          <span class="muted">A certificate number is generated, and the pass is emailed if an email address is given. The pass is valid for 3 months from today.</span>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="nfName">Full name *</label>
+              <input type="text" id="nfName" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="nfFirm">Contractor firm *</label>
+              <input type="text" id="nfFirm" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="nfEmail">Email</label>
+              <input type="email" id="nfEmail" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="nfMobile">Mobile</label>
+              <input type="tel" id="nfMobile" autocomplete="off">
+            </div>
+            <div class="field full">
+              <label for="nfOfficer">Changed by (your name) *</label>
+              <input type="text" id="nfOfficer" autocomplete="off">
+            </div>
+          </div>
+
+          <label class="check">
+            <input type="checkbox" id="nfDeclare">
+            <span>I confirm that the contractor has fully completed the safety induction.</span>
+          </label>
+
+          <div class="form-actions">
+            <button class="btn btn-ghost" onclick="clearNewForm()">Clear</button>
+            <button class="btn btn-primary" id="nfSubmit" onclick="submitNewInduction()">Create induction pass</button>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 
   <!-- EXTEND MODAL -->
   <div class="modal" id="extendModal" onclick="if(event.target===this) closeModal()">
     <div class="sheet">
       <h2>Extend induction validity</h2>
-      <p>Confirm the contractor has completed retraining in the Safety Department.</p>
+      <span class="muted">Confirm the contractor has completed retraining in the Safety Department.</span>
 
-      <div class="info-grid">
-        <div class="info full">
+      <div class="facts">
+        <div class="fact full">
           <div class="k">Contractor</div>
           <div class="v" id="mName">–</div>
         </div>
-        <div class="info">
+        <div class="fact">
           <div class="k">Certificate</div>
           <div class="v" id="mCert">–</div>
         </div>
-        <div class="info">
+        <div class="fact">
           <div class="k">Current expiry</div>
           <div class="v" id="mCurrent">–</div>
         </div>
       </div>
 
-      <div class="officer-field">
-        <label class="k" for="officerName">Changed by (your name)</label>
-        <input type="text" id="officerName" placeholder="e.g. Safety Officer name" autocomplete="name" maxlength="80">
+      <div class="officer">
+        <label for="officerName">Changed by (your name) *</label>
+        <input type="text" id="officerName" autocomplete="off" maxlength="80">
       </div>
 
-      <div class="new-expiry">
+      <div class="newdate">
         <div class="k">New expiry date</div>
         <div class="v" id="mNew">–</div>
       </div>
 
-      <div class="note">Validity extends 3 months from today. An updated pass is emailed to the contractor.</div>
+      <div class="sheet-note">Validity extends 3 months from today. An updated pass is emailed to the contractor.</div>
 
       <div class="sheet-actions">
         <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-        <button class="btn btn-success" id="confirmBtn" onclick="confirmExtend()">Confirm &amp; extend</button>
+        <button class="btn btn-accent" id="confirmBtn" onclick="confirmExtend()">Confirm and extend</button>
       </div>
     </div>
   </div>
@@ -1004,8 +948,8 @@
   <div class="modal" id="historyModal" onclick="if(event.target===this) closeHistoryModal()">
     <div class="sheet" style="max-width: 640px;">
       <h2>Extension history</h2>
-      <p id="hName" style="font-weight: 600; color: var(--ink); margin-bottom: 4px;"></p>
-      <p id="hCert" style="margin-bottom: 18px;"></p>
+      <span class="muted" id="hName" style="font-weight:700; color: var(--ink);"></span>
+      <span class="muted" id="hCert" style="display:block; margin: 2px 0 18px;"></span>
       <div id="hBody"></div>
       <div class="sheet-actions" style="margin-top: 18px;">
         <button class="btn btn-ghost" onclick="closeHistoryModal()">Close</button>
@@ -1020,19 +964,17 @@
     // CONFIG
     // ============================================================
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypc8MItURjTPEvE3FcpIvFMmjqdNwVvAjOpI2Vh0PL4OKFrC3AKbTDU0aKqhxKRWfI/exec';
+    const OFFICER_KEY = 'ci_officer_name';
 
-    const COLORS = {
-      ok: '#2f7d4f',
-      warn: '#b7791f',
-      bad: '#b23b2e',
-      teal: '#0f5e58',
-      grid: '#ece7db'
-    };
+    const COLORS = { ok: '#15803d', warn: '#b45309', bad: '#b91c1c', navy: '#0f1d33', grid: '#eef1f6' };
 
-    let allContractors = [];
-    let currentView = 'search';
+    let allContractors = [];   // full dataset (dashboard + show all)
+    let lastItems = [];        // current search or list result
+    let lastSearch = null;     // { type: 'name' | 'cert' | 'all', value }
+    let currentFilter = 'all';
     let pendingExtend = null;
     let charts = {};
+    const store = { contractors: [], attention: [] }; // rows shown, indexed by button actions
 
     // ============================================================
     // API
@@ -1048,7 +990,7 @@
     }
 
     // ============================================================
-    // DATE HELPERS (dd/MM/yyyy everywhere)
+    // DATES (dd/MM/yyyy everywhere)
     // ============================================================
     function parseDMY(str) {
       if (!str) return null;
@@ -1070,6 +1012,15 @@
       return d;
     }
 
+    // Every validity period is 3 months, so the start date is Valid Until minus 3 months
+    function validFromOf(validUntil) {
+      const d = parseDMY(validUntil);
+      if (!d) return null;
+      const start = new Date(d);
+      start.setMonth(start.getMonth() - 3);
+      return start;
+    }
+
     function statusOf(validUntil) {
       const d = parseDMY(validUntil);
       if (!d) return { key: 'ok', label: 'Active', days: null };
@@ -1081,23 +1032,42 @@
     }
 
     // ============================================================
-    // DASHBOARD
+    // NAVIGATION
     // ============================================================
-    function setBusy(el, busy) {
-      if (!el) return;
-      el.classList.toggle('is-loading', busy);
-      el.disabled = busy;
+    function showView(name) {
+      document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.nav === name));
+
+      const titles = {
+        dashboard: ['Dashboard', 'Induction permit overview'],
+        contractors: ['Contractors', 'Search, filter and extend permits'],
+        new: ['New induction', 'Register a contractor and issue a pass']
+      };
+      setText('pageTitle', titles[name][0]);
+      setText('pageSub', titles[name][1]);
+      closeMenus();
+
+      if (name === 'dashboard' && !allContractors.length) loadDashboard();
+      if (name === 'contractors' && !lastSearch) showAll();
+      if (name === 'new') prefillOfficer('nfOfficer');
     }
 
+    function refreshAll() {
+      loadDashboard().then(() => reloadList());
+    }
+
+    // ============================================================
+    // DASHBOARD
+    // ============================================================
     async function loadDashboard() {
-      document.querySelectorAll('.stat-value').forEach(el => el.classList.add('is-loading'));
+      setStatsLoading(true);
       setBusy(document.getElementById('refreshBtn'), true);
       try {
         const res = await api('getAllExpiring');
         allContractors = res.data || [];
         renderStats();
         renderCharts();
-        if (currentView === 'all') renderList(allContractors);
+        renderAttention();
       } catch (e) {
         document.querySelectorAll('.stat-value').forEach(el => {
           el.classList.remove('is-loading');
@@ -1109,8 +1079,12 @@
       }
     }
 
+    function setStatsLoading(on) {
+      document.querySelectorAll('.stat-value').forEach(el => el.classList.toggle('is-loading', on));
+    }
+
     function renderStats() {
-      document.querySelectorAll('.stat-value').forEach(el => el.classList.remove('is-loading'));
+      setStatsLoading(false);
       let ok = 0, warn = 0, bad = 0;
       allContractors.forEach(c => {
         const s = statusOf(c.validUntil).key;
@@ -1144,23 +1118,16 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          cutout: '70%',
+          cutout: '72%',
           plugins: {
             legend: {
               position: 'bottom',
-              labels: {
-                usePointStyle: true,
-                pointStyle: 'circle',
-                padding: 16,
-                color: '#5d5a50',
-                font: { family: 'Inter', size: 12 }
-              }
+              labels: { usePointStyle: true, pointStyle: 'circle', padding: 16, color: '#475569', font: { family: 'Manrope', size: 12, weight: '600' } }
             }
           }
         }
       });
 
-      // Timeline: validity end dates per month, next 6 months
       const buckets = [];
       const now = new Date();
       for (let i = 0; i < 6; i++) {
@@ -1185,7 +1152,7 @@
           datasets: [{
             label: 'Expiring',
             data: buckets.map(b => b.n),
-            backgroundColor: COLORS.teal,
+            backgroundColor: COLORS.navy,
             borderRadius: 6,
             maxBarThickness: 36
           }]
@@ -1195,140 +1162,203 @@
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            x: {
-              grid: { display: false },
-              ticks: { color: '#8f8a7c', font: { family: 'Inter', size: 12 } }
-            },
-            y: {
-              beginAtZero: true,
-              ticks: { precision: 0, color: '#8f8a7c', font: { family: 'Inter', size: 12 } },
-              grid: { color: COLORS.grid }
-            }
+            x: { grid: { display: false }, ticks: { color: '#64748b', font: { family: 'Manrope', size: 12 } } },
+            y: { beginAtZero: true, ticks: { precision: 0, color: '#64748b', font: { family: 'Manrope', size: 12 } }, grid: { color: COLORS.grid } }
           }
         }
       });
     }
 
+    function renderAttention() {
+      const items = allContractors
+        .filter(c => statusOf(c.validUntil).key !== 'ok')
+        .sort((a, b) => (statusOf(a.validUntil).days ?? 0) - (statusOf(b.validUntil).days ?? 0))
+        .slice(0, 8);
+      store.attention = items;
+      const el = document.getElementById('attentionList');
+      el.innerHTML = items.length
+        ? items.map((c, i) => rowHTML(c, 'attention', i)).join('')
+        : emptyHTML('All clear', 'No permits are expired or expiring within 30 days');
+    }
+
     // ============================================================
-    // SEARCH & LIST
+    // CONTRACTORS: SEARCH, FILTER, LIST
     // ============================================================
     async function runSearch() {
-      const name = document.getElementById('searchName').value.trim();
-      const cert = document.getElementById('searchCert').value.trim();
-      if (!name && !cert) { toast('Enter a name or certificate number', 'warning'); return; }
-
-      setView('search');
+      const q = document.getElementById('q').value.trim();
+      if (!q) { toast('Enter a name or certificate number', 'warning'); return; }
+      const type = /HLL\/|\bC\d{4}\b/i.test(q) ? 'cert' : 'name';
+      lastSearch = { type, value: q };
       renderLoading();
       setBusy(document.getElementById('searchBtn'), true);
       try {
-        const res = name
-          ? await api('searchByName', { name })
-          : await api('searchByCertNumber', { certNumber: cert });
-        renderList(res.data || []);
+        await fetchSearch(lastSearch);
       } catch (e) {
-        renderEmpty('Something went wrong', e.message);
+        renderEmptyState('Something went wrong', e.message);
         toast(e.message, 'error');
       } finally {
         setBusy(document.getElementById('searchBtn'), false);
       }
     }
 
-    function setView(view) {
-      currentView = view;
-      document.querySelectorAll('.tab').forEach(t =>
-        t.classList.toggle('active', t.dataset.view === view));
+    async function fetchSearch(s) {
+      const res = s.type === 'cert'
+        ? await api('searchByCertNumber', { certNumber: s.value })
+        : await api('searchByName', { name: s.value });
+      lastItems = res.data || [];
+      renderContractors();
     }
 
-    document.querySelectorAll('.tab').forEach(t => {
-      t.addEventListener('click', async () => {
-        setView(t.dataset.view);
-        if (t.dataset.view === 'all') {
-          renderLoading();
-          try {
-            if (!allContractors.length) await loadDashboard();
-            renderList(allContractors);
-          } catch (e) { renderEmpty('Could not load', e.message); }
-        } else if (t.dataset.view === 'new') {
-          renderNewForm();
-        } else {
-          renderEmpty();
-        }
-      });
-    });
+    async function showAll() {
+      document.getElementById('q').value = '';
+      lastSearch = { type: 'all' };
+      renderLoading();
+      if (!allContractors.length) await loadDashboard();
+      lastItems = allContractors.slice();
+      renderContractors();
+    }
 
-    function renderList(items) {
-      const el = document.getElementById('resultsList');
-      setText('countLabel', items.length ? `${items.length} record${items.length === 1 ? '' : 's'}` : '');
-      if (!items.length) { renderEmpty('No contractors found', 'Try a different name or certificate number'); return; }
+    async function reloadList() {
+      if (!lastSearch) return;
+      if (lastSearch.type === 'all') {
+        lastItems = allContractors.slice();
+        renderContractors();
+        return;
+      }
+      renderLoading();
+      try {
+        await fetchSearch(lastSearch);
+      } catch (e) {
+        renderEmptyState('Could not refresh', e.message);
+      }
+    }
 
-      el.innerHTML = items.map((c, i) => {
-        const s = statusOf(c.validUntil);
-        const sub = s.days === null ? '' :
-          s.days < 0 ? `${Math.abs(s.days)} day${Math.abs(s.days) === 1 ? '' : 's'} ago` :
-          `in ${s.days} day${s.days === 1 ? '' : 's'}`;
-        const initials = (c.name || '?').split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
-        const payload = esc(JSON.stringify(c));
-        return `
-          <div class="item" style="animation-delay:${Math.min(i, 8) * 40}ms">
-            <div class="who">
-              <div class="avatar">${esc(initials)}</div>
-              <div style="min-width:0">
-                <div class="name">${esc(c.name)}</div>
-                <div class="firm">${esc(c.contractor)}</div>
+    function setFilter(key) {
+      currentFilter = key;
+      renderContractors();
+    }
+
+    function renderContractors() {
+      const rank = { bad: 0, warn: 1, ok: 2 };
+      const counts = { all: lastItems.length, bad: 0, warn: 0, ok: 0 };
+      lastItems.forEach(c => counts[statusOf(c.validUntil).key]++);
+
+      const defs = [['all', 'All'], ['bad', 'Expired'], ['warn', 'Expiring soon'], ['ok', 'Active']];
+      document.getElementById('filters').innerHTML = defs.map(([k, label]) => `
+        <button class="chip ${currentFilter === k ? 'active' : ''}" onclick="setFilter('${k}')">
+          ${label} <span class="chip-count">${counts[k]}</span>
+        </button>`).join('');
+
+      const shown = lastItems
+        .filter(c => currentFilter === 'all' || statusOf(c.validUntil).key === currentFilter)
+        .slice()
+        .sort((a, b) => rank[statusOf(a.validUntil).key] - rank[statusOf(b.validUntil).key]);
+
+      store.contractors = shown;
+      setText('countLabel', shown.length ? `${shown.length} record${shown.length === 1 ? '' : 's'}` : '');
+
+      if (!shown.length) {
+        if (lastItems.length) renderEmptyState('No permits match this filter', 'Choose another filter above');
+        else renderEmptyState('No contractors found', 'Try a different name or certificate number');
+        return;
+      }
+      document.getElementById('resultsList').innerHTML = shown.map((c, i) => rowHTML(c, 'contractors', i)).join('');
+    }
+
+    function rowHTML(c, key, i) {
+      const s = statusOf(c.validUntil);
+      const sub = s.days === null ? '' :
+        s.days < 0 ? `${Math.abs(s.days)} day${Math.abs(s.days) === 1 ? '' : 's'} ago` :
+        `in ${s.days} day${s.days === 1 ? '' : 's'}`;
+      const initials = (c.name || '?').split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+      const canExtend = s.key === 'bad';
+      const extendBtn = canExtend
+        ? `<button class="btn btn-accent btn-sm" onclick="act('extend','${key}',${i})">Extend</button>`
+        : `<button class="btn btn-ghost btn-sm" disabled title="Only expired permits can be extended">Extend</button>`;
+
+      return `
+        <div class="row" style="animation-delay:${Math.min(i, 8) * 30}ms">
+          <div class="avatar">${esc(initials)}</div>
+          <div style="min-width:0">
+            <div class="row-name">${esc(c.name)}</div>
+            <div class="row-sub">${esc(c.contractor)} · ${esc(c.certNumber)}</div>
+          </div>
+          <div class="row-date">
+            <div class="label">Valid until</div>
+            <div class="value">${esc(fmtDMY(c.validUntil))}</div>
+            <div class="sub">${esc(sub)}</div>
+          </div>
+          <div class="row-status"><span class="pill ${s.key}">${s.label}</span></div>
+          <div class="row-actions">
+            ${extendBtn}
+            <div class="menu">
+              <button class="btn btn-ghost btn-sm btn-icon" aria-label="More actions" aria-expanded="false" onclick="toggleMenu(event, this)">⋯</button>
+              <div class="menu-list" role="menu">
+                <button role="menuitem" onclick="act('card','${key}',${i})">Download induction card</button>
+                <button role="menuitem" onclick="act('history','${key}',${i})">Extension history</button>
               </div>
             </div>
-            <div>
-              <div class="meta-label">Certificate</div>
-              <div class="meta-value">${esc(c.certNumber)}</div>
-            </div>
-            <div>
-              <div class="meta-label">Valid until</div>
-              <div class="meta-value">${esc(fmtDMY(c.validUntil))}</div>
-              <div class="meta-sub">${esc(sub)}</div>
-            </div>
-            <div class="item-actions">
-              <span class="pill ${s.key}">${s.label}</span>
-              <button class="btn btn-ghost" data-contractor="${payload}" onclick="downloadCardFromBtn(this)">Download card</button>
-              <button class="btn btn-ghost" data-contractor="${payload}" onclick="openHistoryFromBtn(this)">History</button>
-              ${s.key === 'bad'
-                ? `<button class="btn btn-success" data-contractor="${payload}" onclick="openExtendFromBtn(this)">Extend</button>`
-                : `<button class="btn btn-ghost" disabled title="Only expired permits can be extended">Extend</button>`}
-            </div>
-          </div>`;
-      }).join('');
+          </div>
+        </div>`;
     }
 
-    function openExtendFromBtn(btn) {
-      openExtend(JSON.parse(btn.dataset.contractor));
+    function act(action, key, i) {
+      closeMenus();
+      const c = store[key][i];
+      if (!c) return;
+      if (action === 'extend') openExtend(c);
+      if (action === 'card') downloadCard(c);
+      if (action === 'history') openHistory(c);
     }
 
     function renderLoading() {
       const skeleton = `
-        <div class="skeleton-item">
-          <div class="who">
-            <div class="sk sk-avatar" style="margin-right:12px"></div>
-            <div class="sk-lines" style="flex:1"><div class="sk sk-line w60"></div><div class="sk sk-line w40"></div></div>
-          </div>
+        <div class="row" style="pointer-events:none">
+          <div class="sk sk-avatar"></div>
+          <div class="sk-lines"><div class="sk sk-line w60"></div><div class="sk sk-line w40"></div></div>
           <div class="sk-lines"><div class="sk sk-line w50"></div><div class="sk sk-line w60"></div></div>
-          <div class="sk-lines"><div class="sk sk-line w50"></div><div class="sk sk-line w30"></div></div>
-          <div class="sk" style="width:96px;height:30px;border-radius:999px"></div>
+          <div class="sk-lines"><div class="sk sk-line w50"></div></div>
+          <div class="sk" style="width:120px;height:30px;border-radius:999px"></div>
         </div>`;
       document.getElementById('resultsList').innerHTML = skeleton.repeat(3);
       setText('countLabel', '');
     }
 
-    function renderEmpty(title = 'Search for a contractor', msg = 'Enter a name or certificate number above, or switch to “All contractors”.') {
-      document.getElementById('resultsList').innerHTML = `
-        <div class="empty">
-          <div class="empty-icon">?</div>
-          <h3>${esc(title)}</h3>
-          <p>${esc(msg)}</p>
-        </div>`;
+    function renderEmptyState(title, msg) {
+      document.getElementById('resultsList').innerHTML = emptyHTML(title, msg);
       setText('countLabel', '');
     }
 
+    function emptyHTML(title, msg) {
+      return `
+        <div class="empty">
+          <div class="empty-mark">✓</div>
+          <h3>${esc(title)}</h3>
+          <p>${esc(msg)}</p>
+        </div>`;
+    }
+
+    // Row menu
+    function toggleMenu(event, btn) {
+      event.stopPropagation();
+      const menu = btn.nextElementSibling;
+      const wasOpen = menu.classList.contains('open');
+      closeMenus();
+      if (!wasOpen) {
+        menu.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    function closeMenus() {
+      document.querySelectorAll('.menu-list.open').forEach(m => m.classList.remove('open'));
+      document.querySelectorAll('.menu-btn[aria-expanded="true"], .menu [aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    }
+
+    document.addEventListener('click', closeMenus);
+
     // ============================================================
-    // EXTEND FLOW
+    // EXTEND VALIDITY
     // ============================================================
     function openExtend(c) {
       if (statusOf(c.validUntil).key !== 'bad') {
@@ -1340,7 +1370,7 @@
       setText('mCert', c.certNumber);
       setText('mCurrent', fmtDMY(c.validUntil));
       setText('mNew', fmtDMY(addMonths(3)));
-      document.getElementById('officerName').value = localStorage.getItem('ci_officer_name') || '';
+      prefillOfficer('officerName');
       document.getElementById('extendModal').classList.add('open');
     }
 
@@ -1358,41 +1388,129 @@
         officerInput.focus();
         return;
       }
-      localStorage.setItem('ci_officer_name', officer);
-      const target = pendingExtend; // keep a copy: closeModal() clears pendingExtend
+      localStorage.setItem(OFFICER_KEY, officer);
+
+      const target = pendingExtend; // closeModal() clears pendingExtend
       const btn = document.getElementById('confirmBtn');
-      btn.disabled = true;
-      btn.textContent = 'Saving…';
+      setBusy(btn, true);
       try {
         const res = await api('extendValidity', {
           certNumber: target.certNumber,
           rowIndex: target.rowIndex,
-          officer: officer
+          officer
         });
         closeModal();
         toast(`Extended for ${target.name} until ${res.newValidUntil}`, 'success');
         await loadDashboard();
-        const name = document.getElementById('searchName').value.trim();
-        const cert = document.getElementById('searchCert').value.trim();
-        if (currentView === 'search' && (name || cert)) runSearch();
+        await reloadList();
       } catch (e) {
         toast(e.message, 'error');
       } finally {
-        btn.disabled = false;
-        btn.textContent = 'Confirm & extend';
+        setBusy(btn, false);
       }
     }
 
     // ============================================================
-    // UTILS
+    // EXTENSION HISTORY
     // ============================================================
-    // ============================================================
-    // INDUCTION CARD → JPG (with QR code)
-    // ============================================================
-    function downloadCardFromBtn(btn) {
-      downloadCard(JSON.parse(btn.dataset.contractor));
+    function openHistory(c) {
+      setText('hName', c.name || '–');
+      setText('hCert', c.certNumber || '–');
+      const ext = (c.extensions || []).slice().reverse();
+      const body = document.getElementById('hBody');
+
+      if (ext.length) {
+        body.innerHTML = `
+          <div class="hist-wrap">
+            <table class="hist-table">
+              <thead>
+                <tr>
+                  <th>Extended on</th>
+                  <th>Previous expiry</th>
+                  <th>New expiry</th>
+                  <th>Changed by</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${ext.map(x => `
+                  <tr>
+                    <td>${esc(x.date)}</td>
+                    <td>${esc(x.previous)}</td>
+                    <td><strong>${esc(x.newValidUntil)}</strong></td>
+                    <td>${esc(x.by && x.by !== 'Unknown' ? x.by : '–')}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>`;
+      } else if (c.emailStatus === 'Extended') {
+        body.innerHTML = emptyHTML('No dates available', 'Extended before history was logged');
+      } else {
+        body.innerHTML = emptyHTML('Not extended', 'This permit has not been extended');
+      }
+      document.getElementById('historyModal').classList.add('open');
     }
 
+    function closeHistoryModal() {
+      document.getElementById('historyModal').classList.remove('open');
+    }
+
+    // ============================================================
+    // NEW INDUCTION
+    // ============================================================
+    function prefillOfficer(id) {
+      const el = document.getElementById(id);
+      if (el && !el.value) el.value = localStorage.getItem(OFFICER_KEY) || '';
+    }
+
+    function clearNewForm() {
+      ['nfName', 'nfFirm', 'nfEmail', 'nfMobile'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('nfDeclare').checked = false;
+    }
+
+    async function submitNewInduction() {
+      const val = id => document.getElementById(id).value.trim();
+      const name = val('nfName');
+      const firm = val('nfFirm');
+      const email = val('nfEmail');
+      const mobile = val('nfMobile');
+      const officer = val('nfOfficer');
+
+      if (!name || !firm || !officer) {
+        toast('Full name, contractor firm and your name are required', 'warning');
+        return;
+      }
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        toast('Please enter a valid email address', 'warning');
+        return;
+      }
+      if (!document.getElementById('nfDeclare').checked) {
+        toast('Please confirm the induction declaration', 'warning');
+        return;
+      }
+
+      localStorage.setItem(OFFICER_KEY, officer);
+      const btn = document.getElementById('nfSubmit');
+      setBusy(btn, true);
+      try {
+        const res = await api('addInduction', { name, firm, email, mobile, officer });
+        toast(`Induction created: ${res.certNumber}`, 'success');
+        clearNewForm();
+        await loadDashboard();
+        document.getElementById('q').value = name;
+        showView('contractors');
+        runSearch();
+      } catch (e) {
+        toast(e.message, 'error');
+      } finally {
+        setBusy(btn, false);
+      }
+    }
+
+    // ============================================================
+    // INDUCTION CARD (JPG with QR code)
+    // ============================================================
     function makeQRImage(text, size) {
       return new Promise((resolve, reject) => {
         const holder = document.createElement('div');
@@ -1423,25 +1541,16 @@
       ctx.closePath();
     }
 
-    // Every validity period is 3 months, so the start date is Valid Until minus 3 months
-    function validFromOf(validUntil) {
-      const d = parseDMY(validUntil);
-      if (!d) return null;
-      const start = new Date(d);
-      start.setMonth(start.getMonth() - 3);
-      return start;
-    }
-
     function drawLabel(ctx, text, x, y, align = 'left') {
-      ctx.font = '600 24px Inter, Arial, sans-serif';
-      ctx.fillStyle = '#8f8a7c';
+      ctx.font = '600 24px Manrope, Arial, sans-serif';
+      ctx.fillStyle = '#64748b';
       ctx.textAlign = align;
       ctx.fillText(text.toUpperCase(), x, y);
     }
 
     function drawValue(ctx, text, x, y, maxW, align = 'left') {
-      ctx.font = '600 38px Inter, Arial, sans-serif';
-      ctx.fillStyle = '#1d1b16';
+      ctx.font = '700 38px Manrope, Arial, sans-serif';
+      ctx.fillStyle = '#0f172a';
       ctx.textAlign = align;
       ctx.fillText(text, x, y, maxW);
     }
@@ -1460,7 +1569,8 @@
           firm: c.contractor,
           id: c.certNumber
         });
-        const qr = await makeQRImage(payload, 560);
+        const qrSize = 480;
+        const qr = await makeQRImage(payload, qrSize);
 
         const W = 1080, H = 1640, pad = 60;
         const canvas = document.createElement('canvas');
@@ -1469,8 +1579,8 @@
         const ctx = canvas.getContext('2d');
         const cx = W / 2;
 
-        // Page background
-        ctx.fillStyle = '#f6f3ec';
+        // Page
+        ctx.fillStyle = '#f2f4f8';
         ctx.fillRect(0, 0, W, H);
 
         // Card
@@ -1480,64 +1590,61 @@
         ctx.fill();
         ctx.clip();
 
-        // Header band (clipped to card corners)
-        ctx.fillStyle = '#0f5e58';
+        // Header band
+        ctx.fillStyle = '#0f1d33';
         ctx.fillRect(pad, pad, W - pad * 2, 230);
         ctx.restore();
 
-        // Header text
         ctx.textAlign = 'center';
-        ctx.fillStyle = '#f6f3ec';
-        ctx.font = '700 50px Fraunces, Georgia, serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 50px Manrope, Arial, sans-serif';
         ctx.fillText('INDUCTION COMPLETION PASS', cx, pad + 110, W - pad * 2 - 80);
-        ctx.font = '400 30px Inter, Arial, sans-serif';
-        ctx.fillStyle = '#d9ece9';
+        ctx.font = '500 30px Manrope, Arial, sans-serif';
+        ctx.fillStyle = '#fb923c';
         ctx.fillText('HLL Lifecare Limited · Peroorkada Factory', cx, pad + 170);
 
         // Holder
-        ctx.fillStyle = '#5d5a50';
-        ctx.font = '400 34px Inter, Arial, sans-serif';
+        ctx.fillStyle = '#475569';
+        ctx.font = '500 34px Manrope, Arial, sans-serif';
         ctx.fillText('This pass certifies that', cx, pad + 350);
 
-        ctx.fillStyle = '#0f5e58';
-        ctx.font = '700 78px Fraunces, Georgia, serif';
+        ctx.fillStyle = '#0f1d33';
+        ctx.font = '800 78px Manrope, Arial, sans-serif';
         ctx.fillText((c.name || '').toUpperCase(), cx, pad + 440, W - pad * 2 - 80);
 
-        ctx.fillStyle = '#5d5a50';
-        ctx.font = '400 32px Inter, Arial, sans-serif';
+        ctx.fillStyle = '#475569';
+        ctx.font = '500 32px Manrope, Arial, sans-serif';
         ctx.fillText('has successfully completed the required safety induction.', cx, pad + 505, W - pad * 2 - 80);
 
-        // QR code block
-        const qrSize = 480;
+        // QR block
         const qrX = cx - qrSize / 2;
         const qrY = pad + 560;
         ctx.fillStyle = '#f8fafc';
         roundRectPath(ctx, qrX - 30, qrY - 30, qrSize + 60, qrSize + 60, 24);
         ctx.fill();
-        ctx.strokeStyle = '#e7e2d6';
+        ctx.strokeStyle = '#e3e7ef';
         ctx.lineWidth = 2;
         ctx.stroke();
         ctx.drawImage(qr, qrX, qrY, qrSize, qrSize);
 
         ctx.textAlign = 'center';
-        ctx.fillStyle = '#5d5a50';
-        ctx.font = '600 26px Inter, Arial, sans-serif';
+        ctx.fillStyle = '#475569';
+        ctx.font = '700 26px Manrope, Arial, sans-serif';
         ctx.fillText('SCAN FOR SITE ACCESS', cx, qrY + qrSize + 80);
 
         // Divider
         const divY = qrY + qrSize + 120;
-        ctx.fillStyle = '#e7e2d6';
+        ctx.fillStyle = '#e3e7ef';
         ctx.fillRect(pad + 60, divY, W - pad * 2 - 120, 2);
 
-        // Details grid
+        // Details
         const leftX = pad + 80;
-        const rightX = cx + 40;
+        const rightEdge = W - pad - 80;
         const colMax = (W - pad * 2) / 2 - 100;
 
         drawLabel(ctx, 'Certificate', leftX, divY + 60);
         drawValue(ctx, c.certNumber || '–', leftX, divY + 106, colMax);
 
-        const rightEdge = W - pad - 80;
         drawLabel(ctx, 'Valid from', rightEdge, divY + 60, 'right');
         drawValue(ctx, fmtDMY(validFromOf(c.validUntil)), rightEdge, divY + 106, colMax, 'right');
 
@@ -1546,11 +1653,11 @@
 
         // Footer
         ctx.textAlign = 'center';
-        ctx.fillStyle = '#8f8a7c';
-        ctx.font = '400 24px Inter, Arial, sans-serif';
+        ctx.fillStyle = '#64748b';
+        ctx.font = '500 24px Manrope, Arial, sans-serif';
         ctx.fillText('Safety & Environment Department · HLL Lifecare Limited', cx, H - pad - 36);
 
-        // Save as JPG
+        // Save
         const url = canvas.toDataURL('image/jpeg', 0.95);
         const a = document.createElement('a');
         const safeCert = String(c.certNumber || 'card').replace(/[\/\\:*?"<>| ]/g, '_');
@@ -1566,151 +1673,18 @@
     }
 
     // ============================================================
-    // EXTENSION HISTORY POPUP
+    // UTILITIES
     // ============================================================
-    // ============================================================
-    // NEW INDUCTION
-    // ============================================================
-    function renderNewForm() {
-      setText('countLabel', '');
-      document.getElementById('resultsList').innerHTML = `
-        <div class="new-form">
-          <div class="nf-grid">
-            <div class="nf-field">
-              <label for="nfName">Full name *</label>
-              <input id="nfName" autocomplete="off">
-            </div>
-            <div class="nf-field">
-              <label for="nfFirm">Contractor firm *</label>
-              <input id="nfFirm" autocomplete="off">
-            </div>
-            <div class="nf-field">
-              <label for="nfEmail">Email</label>
-              <input id="nfEmail" type="email" autocomplete="off">
-            </div>
-            <div class="nf-field">
-              <label for="nfMobile">Mobile</label>
-              <input id="nfMobile" type="tel" autocomplete="off">
-            </div>
-            <div class="nf-field full">
-              <label for="nfOfficer">Changed by (your name) *</label>
-              <input id="nfOfficer" autocomplete="off">
-            </div>
-          </div>
-
-          <label class="nf-check">
-            <input type="checkbox" id="nfDeclare">
-            <span>I confirm that the contractor has fully completed the safety induction.</span>
-          </label>
-
-          <div class="nf-actions">
-            <button type="button" class="btn btn-ghost" onclick="clearNewForm()">Clear</button>
-            <button type="button" class="btn btn-success" id="nfSubmit" onclick="submitNewInduction()">Create induction pass</button>
-          </div>
-
-          <div class="nf-note">A certificate number is generated, and the pass is emailed to the contractor if an email is given. The pass is valid for 3 months from today.</div>
-        </div>`;
-      document.getElementById('nfOfficer').value = localStorage.getItem('ci_officer_name') || '';
+    function setBusy(el, busy) {
+      if (!el) return;
+      el.classList.toggle('is-loading', busy);
+      el.disabled = busy;
     }
 
-    function clearNewForm() {
-      ['nfName', 'nfFirm', 'nfEmail', 'nfMobile'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-      });
-      const declare = document.getElementById('nfDeclare');
-      if (declare) declare.checked = false;
+    function setText(id, v) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = v;
     }
-
-    async function submitNewInduction() {
-      const val = id => document.getElementById(id).value.trim();
-      const name = val('nfName');
-      const firm = val('nfFirm');
-      const email = val('nfEmail');
-      const mobile = val('nfMobile');
-      const officer = val('nfOfficer');
-
-      if (!name || !firm || !officer) {
-        toast('Full name, contractor firm and your name are required', 'warning');
-        return;
-      }
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        toast('Please enter a valid email address', 'warning');
-        return;
-      }
-      if (!document.getElementById('nfDeclare').checked) {
-        toast('Please confirm the induction declaration', 'warning');
-        return;
-      }
-
-      localStorage.setItem('ci_officer_name', officer);
-      const btn = document.getElementById('nfSubmit');
-      setBusy(btn, true);
-      try {
-        const res = await api('addInduction', { name, firm, email, mobile, officer });
-        toast(`Induction created: ${res.certNumber}`, 'success');
-        clearNewForm();
-        await loadDashboard();
-        // Show the new record in the search results
-        document.getElementById('searchName').value = name;
-        document.getElementById('searchCert').value = '';
-        setView('search');
-        runSearch();
-      } catch (e) {
-        toast(e.message, 'error');
-      } finally {
-        setBusy(btn, false);
-      }
-    }
-
-    function openHistoryFromBtn(btn) {
-      openHistory(JSON.parse(btn.dataset.contractor));
-    }
-
-    function openHistory(c) {
-      setText('hName', c.name || '–');
-      setText('hCert', c.certNumber || '–');
-
-      const ext = (c.extensions || []).slice().reverse(); // newest first
-      const body = document.getElementById('hBody');
-
-      if (ext.length) {
-        body.innerHTML = `
-          <div class="hist-wrap">
-            <table class="hist-table">
-              <thead>
-                <tr>
-                  <th>Extended on</th>
-                  <th>Previous expiry</th>
-                  <th>New expiry</th>
-                  <th>Changed by</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${ext.map(x => `
-                  <tr>
-                    <td>${esc(x.date)}</td>
-                    <td>${esc(x.previous)}</td>
-                    <td><strong>${esc(x.newValidUntil)}</strong></td>
-                    <td>${esc(x.by && x.by !== 'Unknown' ? x.by : '–')}</td>
-                  </tr>`).join('')}
-              </tbody>
-            </table>
-          </div>`;
-      } else if (c.emailStatus === 'Extended') {
-        body.innerHTML = `<div class="empty"><p>Extended before history was logged. No dates are available.</p></div>`;
-      } else {
-        body.innerHTML = `<div class="empty"><p>This permit has not been extended.</p></div>`;
-      }
-
-      document.getElementById('historyModal').classList.add('open');
-    }
-
-    function closeHistoryModal() {
-      document.getElementById('historyModal').classList.remove('open');
-    }
-
-    function setText(id, v) { document.getElementById(id).textContent = v; }
 
     function esc(s) {
       return String(s ?? '').replace(/[&<>"']/g, ch => ({
@@ -1727,15 +1701,22 @@
       toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
     }
 
+    document.getElementById('q').addEventListener('keydown', e => {
+      if (e.key === 'Enter') runSearch();
+    });
+
     document.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && (e.target.id === 'searchName' || e.target.id === 'searchCert')) runSearch();
-      if (e.key === 'Escape') { closeModal(); closeHistoryModal(); }
+      if (e.key === 'Escape') {
+        closeModal();
+        closeHistoryModal();
+        closeMenus();
+      }
     });
 
     // ============================================================
     // INIT
     // ============================================================
-    loadDashboard();
+    showView('dashboard');
   </script>
 </body>
 </html>
